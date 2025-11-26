@@ -1,0 +1,9 @@
+aiohttp
+nats-py
+redis
+prometheus-client
+uvloop
+fastapi
+uvicorn
+pyjwt
+cryptography

@@ -1,0 +1,17 @@
+{
+  "data": [
+    {
+      "id": "eth_0xpool",
+      "type": "pool",
+      "attributes": {
+        "address": "0xpool",
+        "name": "USDC / WETH 0.01%"
+      },
+      "relationships": {
+        "base_token": { "data": { "id": "eth_0xbase", "type": "token" } },
+        "quote_token": { "data": { "id": "eth_0xquote", "type": "token" } },
+        "dex": { "data": { "id": "uniswap_v3", "type": "dex" } }
+      }
+    }
+  ]
+}

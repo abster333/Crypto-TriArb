@@ -1,0 +1,12 @@
+services:
+  nats:
+    image: nats:2.10-alpine
+    command: ["-js", "-DV"]
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "no"]
+    ports:
+      - "${REDIS_PORT:-6379}:6379"

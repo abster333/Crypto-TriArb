@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Pool Manifest",
+  "type": "object",
+  "properties": {
+    "pairs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "token0": { "type": "string" },
+          "token1": { "type": "string" },
+          "pools": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "address": { "type": "string", "pattern": "^0x[0-9a-fA-F]{40}$" },
+                "metadata": {
+                  "type": "object",
+                  "properties": {
+                    "platform": { "type": "string" },
+                    "network": { "type": "string" },
+                    "fee": { "type": "integer", "minimum": 0 }
+                  },
+                  "required": ["platform", "network", "fee"],
+                  "additionalProperties": false
+                }
+              },
+              "required": ["address", "metadata"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["id", "token0", "token1", "pools"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["pairs"],
+  "additionalProperties": false
+}

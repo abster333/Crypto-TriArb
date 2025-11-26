@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Alarm Config",
+  "type": "object",
+  "properties": {
+    "thresholds": {
+      "type": "object",
+      "properties": {
+        "stale_snapshot_ms": { "type": "integer", "minimum": 0 },
+        "stale_ws_ms": { "type": "integer", "minimum": 0 },
+        "missing_data": { "type": "integer", "minimum": 0 }
+      },
+      "required": ["stale_snapshot_ms", "stale_ws_ms"],
+      "additionalProperties": false
+    },
+    "webhooks": {
+      "type": "array",
+      "items": { "type": "string", "format": "uri" }
+    }
+  },
+  "required": ["thresholds"],
+  "additionalProperties": false
+}

@@ -1,0 +1,114 @@
+name: python-ingest
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "python-ingest/**"
+      - "helm/python-ingest/**"
+      - ".github/workflows/python-ingest-ci.yml"
+  pull_request:
+    paths:
+      - "python-ingest/**"
+      - "helm/python-ingest/**"
+      - ".github/workflows/python-ingest-ci.yml"
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: "3.11"
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/python-ingest
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: python-ingest/requirements.txt
+
+      - name: Install dependencies
+        working-directory: python-ingest
+        run: pip install --no-cache-dir -r requirements.txt
+
+      - name: Compile sources
+        run: python -m compileall python-ingest/app
+
+      - name: Run unit tests
+        run: |
+          PYTHONPATH=python-ingest \
+          python -m unittest discover python-ingest/tests
+
+  docker:
+    needs: test
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to registry
+        env:
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+        run: |
+          if [ -z "${REGISTRY_USERNAME}" ] || [ -z "${REGISTRY_PASSWORD}" ]; then
+            echo "Registry credentials are not set; skipping push"
+            exit 0
+          fi
+          echo "${REGISTRY_PASSWORD}" | docker login ${{ env.REGISTRY }} -u "${REGISTRY_USERNAME}" --password-stdin
+
+      - name: Build and push image
+        env:
+          DOCKER_PUSH: ${{ secrets.REGISTRY_PASSWORD != '' && secrets.REGISTRY_USERNAME != '' }}
+        run: |
+          TAG_SHA="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          TAG_LATEST="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+          docker buildx build \
+            --platform linux/amd64 \
+            --file python-ingest/Dockerfile \
+            --tag "$TAG_SHA" \
+            --tag "$TAG_LATEST" \
+            --push \
+            python-ingest
+
+  helm:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.2
+
+      - name: Lint chart
+        run: helm lint helm/python-ingest
+
+      - name: Package chart
+        run: |
+          mkdir -p dist
+          helm package helm/python-ingest --destination dist
+
+      - name: Upload chart artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-ingest-chart
+          path: dist/*.tgz

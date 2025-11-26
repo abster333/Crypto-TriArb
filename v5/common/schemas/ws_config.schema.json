@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WebSocket Config",
+  "type": "object",
+  "properties": {
+    "networks": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "url": { "type": "string", "minLength": 1 },
+          "topics": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+          "reconnect_delay": { "type": "integer", "minimum": 0 }
+        },
+        "required": ["url", "topics", "reconnect_delay"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["networks"],
+  "additionalProperties": false
+}

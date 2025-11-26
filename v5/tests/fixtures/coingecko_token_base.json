@@ -1,0 +1,11 @@
+{
+  "data": {
+    "id": "eth_0xbase",
+    "type": "token",
+    "attributes": {
+      "address": "0xbase",
+      "symbol": "USDC",
+      "decimals": 6
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "data": {
+    "id": "eth_0xquote",
+    "type": "token",
+    "attributes": {
+      "address": "0xquote",
+      "symbol": "WETH",
+      "decimals": 18
+    }
+  }
+}

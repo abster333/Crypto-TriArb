@@ -1,0 +1,50 @@
+{
+  "title": "DEX V5 - Opportunities & Simulation",
+  "editable": true,
+  "schemaVersion": 39,
+  "version": 2,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Opportunities Detected (5m)",
+      "targets": [
+        { "expr": "sum(increase(dex_simulator_opportunities_total[5m]))" }
+      ]
+    },
+    {
+      "type": "heatmap",
+      "title": "Cycle ROI Distribution",
+      "targets": [
+        { "expr": "sum(rate(dex_cycle_roi_bucket[5m])) by (le,cycle)" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Simulation Duration",
+      "targets": [
+        { "expr": "histogram_quantile(0.95, sum(rate(dex_simulation_duration_seconds_bucket[5m])) by (le))" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "RPC Latency (p95)",
+      "targets": [
+        { "expr": "histogram_quantile(0.95, sum(rate(dex_rpc_latency_seconds_bucket[5m])) by (le,method,network))" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "WS Reconnects (5m)",
+      "targets": [
+        { "expr": "sum(increase(dex_ws_reconnects_total[5m]))" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "WS Last Message (per network)",
+      "targets": [
+        { "expr": "dex_ws_last_message_ms", "legendFormat": "{{network}}" }
+      ]
+    }
+  ]
+}

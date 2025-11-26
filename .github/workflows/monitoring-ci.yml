@@ -1,0 +1,44 @@
+name: monitoring
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "helm/monitoring/**"
+      - "grafana/**"
+      - "docs/observability.md"
+      - ".github/workflows/monitoring-ci.yml"
+  pull_request:
+    paths:
+      - "helm/monitoring/**"
+      - "grafana/**"
+      - "docs/observability.md"
+      - ".github/workflows/monitoring-ci.yml"
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.2
+
+      - name: Helm dependency update
+        run: helm dependency update helm/monitoring
+
+      - name: Helm lint
+        run: helm lint helm/monitoring
+
+      - name: Helm lint (dashboard)
+        run: helm lint helm/dashboard || echo "dashboard chart not present or failing lint"
+
+      - name: Upload Grafana dashboards
+        uses: actions/upload-artifact@v4
+        with:
+          name: grafana-dashboards
+          path: grafana/dashboards/*.json

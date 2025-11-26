@@ -1,0 +1,8 @@
+{
+  "thresholds": {
+    "stale_snapshot_ms": 300000,
+    "stale_ws_ms": 60000,
+    "missing_data": 0
+  },
+  "webhooks": []
+}

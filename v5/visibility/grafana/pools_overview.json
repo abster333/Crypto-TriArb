@@ -1,0 +1,64 @@
+{
+  "title": "DEX V5 - Pools Overview",
+  "editable": true,
+  "schemaVersion": 39,
+  "version": 2,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Pool Price (by pool)",
+      "fieldConfig": {
+        "defaults": { "unit": "none" }
+      },
+      "targets": [
+        { "expr": "dex_pool_price", "legendFormat": "{{pool_address}} ({{network}})" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Pool Liquidity (by pool)",
+      "fieldConfig": {
+        "defaults": { "unit": "currency" }
+      },
+      "targets": [
+        { "expr": "dex_pool_liquidity", "legendFormat": "{{pool_address}} ({{network}})" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "WebSocket Freshness (ms)",
+      "targets": [
+        { "expr": "dex_pool_last_ws_ms", "legendFormat": "{{pool_address}}" }
+      ]
+    },
+    {
+      "type": "bargauge",
+      "title": "Stale Snapshot / Stream",
+      "targets": [
+        { "expr": "sum(dex_pool_stale_snapshot)" , "legendFormat": "snapshot stale" },
+        { "expr": "sum(dex_pool_stale_stream)", "legendFormat": "stream stale" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Active Pools",
+      "targets": [
+        { "expr": "count(dex_pool_price)" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Stale Pools",
+      "targets": [
+        { "expr": "sum(dex_pool_stale)" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "WS Queue Depth",
+      "targets": [
+        { "expr": "dex_ingest_ws_queue_depth" }
+      ]
+    }
+  ]
+}

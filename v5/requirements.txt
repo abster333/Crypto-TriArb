@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+aiohttp
+websockets
+redis
+prometheus-client
+pydantic>=2
+pydantic-settings
+jsonschema
+pytest  # optional, for tests

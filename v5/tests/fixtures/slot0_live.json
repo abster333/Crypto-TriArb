@@ -1,0 +1,29 @@
+[
+  {
+    "pool": "0xc7bbec68d12a0d1830360f8ec58fa599ba1b0e9b",
+    "pool_name": "WETH / USDT 0.01%",
+    "sqrt_price_x96": 4143550991595150748947956,
+    "tick": -197181,
+    "price_quote": 2880.476555736,
+    "decimals_token0": 18,
+    "decimals_token1": 6
+  },
+  {
+    "pool": "0xe0554a476a092703abdb3ef35c80e0d76d32939f",
+    "pool_name": "USDC / WETH 0.01%",
+    "sqrt_price_x96": 1515075379214723712249959036173279,
+    "tick": 197182,
+    "price_quote": 0.0003466524492,
+    "decimals_token0": 6,
+    "decimals_token1": 18
+  },
+  {
+    "pool": "0xae4045ffeddf61d570e6d1fe2d71ded1a2e85a88",
+    "pool_name": "ENA / WETH 0.05%",
+    "sqrt_price_x96": 731047056857401637438282669,
+    "tick": -93717,
+    "price_quote": 0.00008828685758,
+    "decimals_token0": 18,
+    "decimals_token1": 18
+  }
+]

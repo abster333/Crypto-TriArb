@@ -1,0 +1,6 @@
+{
+  "networks": {
+    "eth": {"url": "${ALCHEMY_WS_URL}", "topics": ["uniswap_v3_swap"], "reconnect_delay": 5},
+    "bsc": {"url": "${BSC_WS_URL}", "topics": ["pancake_v3_swap"], "reconnect_delay": 5}
+  }
+}
