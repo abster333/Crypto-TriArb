@@ -39,7 +39,7 @@ def _load_env() -> None:
             key, val = line.split("=", 1)
             key = key.strip()
             val = val.strip()
-            os.environ.setdefault(key, val)
+            os.environ[key] = val
         log.info("Loaded environment from %s", path)
         break
 
