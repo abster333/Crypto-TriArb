@@ -41,7 +41,10 @@ async def build_components(settings: Settings):
 
     hot_cache = HotCache(settings.redis_url)
     snapshots = SnapshotStore(settings.redis_url)
-    rpc = BatchRpcServer()
+    rpc = BatchRpcServer(
+        max_calls_per_second=settings.rpc_max_qps,
+        max_batch_size=settings.rpc_max_batch_size,
+    )
 
     await hot_cache.start()
     await hot_cache.clear_all()
@@ -61,6 +64,7 @@ async def build_components(settings: Settings):
         min_roi_threshold=settings.strategy_tri_threshold_bps / 10_000.0,
         enforce_freshness=True,
     )
+    simulator.settings = settings  # attach for downstream helpers
     detector = RealtimeArbDetector(simulator, min_roi_threshold=settings.strategy_tri_threshold_bps / 10_000.0)
     ingest = IngestService(
         rpc,

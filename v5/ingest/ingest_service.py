@@ -70,7 +70,9 @@ class IngestService:
         await self.hot_cache.start()
         for poller in self.pollers:
             await poller.start()
-        await self.ws_runner.start()
+        # Do not block startup on WS connects (can hang when endpoints are unreachable);
+        # run WS start in the background and let poll fallback keep states fresh.
+        self._tasks.append(asyncio.create_task(self.ws_runner.start(), name="v5-ws-start"))
         # Periodic resync loop (also acts as initial snapshot)
         self._tasks.append(asyncio.create_task(self._resync_loop(), name="v5-resync-loop"))
         # Optional legacy poll loop (disabled by default)
@@ -98,9 +100,13 @@ class IngestService:
         await self.snapshots.close()
 
     async def _poll_loop(self) -> None:
+        log.info("POLL_LOOP start enable_poll_fallback=%s pollers=%d", self.enable_poll_fallback, len(self.pollers))
+        iterations = 0
         while True:
+            iterations += 1
             for poller in self.pollers:
                 snapshots = await poller.poll_once()
+                log.info("POLL_LOOP tick=%d poller=%s snapshots=%d", iterations, poller.__class__.__name__, len(snapshots))
                 for snap in snapshots:
                     await self.out_queue.put(snap)
             await asyncio.sleep(min(p.poll_interval for p in self.pollers) if self.pollers else 5)

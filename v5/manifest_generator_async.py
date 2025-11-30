@@ -41,6 +41,18 @@ def parse_targets(raw: str) -> List[Target]:
     return targets
 
 
+def _clean_symbol(value: str | None, fallback: str) -> str | None:
+    """Return an uppercase ASCII symbol or None if it cannot be sanitized."""
+    candidate = (value or fallback or "").strip().upper()
+    if not candidate:
+        return None
+    if candidate.isascii():
+        return candidate
+    filtered = "".join(ch for ch in candidate if ch.isascii() and (ch.isalnum() or ch in {"_", "-"}))
+    filtered = filtered.strip("_-")
+    return filtered or None
+
+
 async def rate_sleep(tier: str) -> None:
     # Slow down on free/demo keys to avoid 429s
     delay = 3.0 if tier != "paid" else 0.3
@@ -97,6 +109,7 @@ async def build_manifests_async(targets: List[Target], api_key: str, tier: str) 
     tokens: Dict[str, dict] = {}
     pairs: List[dict] = []
     token_cache: Dict[str, dict] = {}
+    invalid_tokens: set[str] = set()
     seen_pool_addresses: set[str] = set()
     async with aiohttp.ClientSession() as session:
         for tgt in targets:
@@ -124,9 +137,10 @@ async def build_manifests_async(targets: List[Target], api_key: str, tier: str) 
                 if not (addr and net0 and addr0 and net1 and addr1):
                     continue
                 for net, a in ((net0, addr0), (net1, addr1)):
-                    if a in token_cache:
+                    if not a or a in token_cache or a in invalid_tokens:
                         continue
-                    symbol = a[:6].upper()
+                    default_symbol = a[:6].upper()
+                    symbol = default_symbol
                     decimals = 18
                     try:
                         data = await fetch_token(session, net, a, api_key)
@@ -135,7 +149,19 @@ async def build_manifests_async(targets: List[Target], api_key: str, tier: str) 
                         decimals = attr.get("decimals", decimals)
                     except Exception:
                         pass
-                    token_cache[a] = {"symbol": symbol.upper(), "address": a, "decimals": int(decimals), "chain_id": 1 if net == "eth" else 56, "chain": net}
+                    cleaned_symbol = _clean_symbol(symbol, default_symbol)
+                    if not cleaned_symbol:
+                        invalid_tokens.add(a)
+                        log.warning("Skipping token %s on %s due to non-ASCII symbol %r", a, net, symbol)
+                        await rate_sleep(tier)
+                        continue
+                    token_cache[a] = {
+                        "symbol": cleaned_symbol,
+                        "address": a,
+                        "decimals": int(decimals),
+                        "chain_id": 1 if net == "eth" else 56,
+                        "chain": net,
+                    }
                     await rate_sleep(tier)
                 sym0 = token_cache.get(addr0, {}).get("symbol")
                 sym1 = token_cache.get(addr1, {}).get("symbol")

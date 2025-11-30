@@ -8,3 +8,5 @@ pydantic>=2
 pydantic-settings
 jsonschema
 pytest  # optional, for tests
+pytest-asyncio  # for async tests
+eth-abi

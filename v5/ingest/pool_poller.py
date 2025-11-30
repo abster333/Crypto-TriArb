@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import abc
+import asyncio
 import time
 from collections import defaultdict
 from typing import Iterable, List, Dict
@@ -66,10 +67,12 @@ class UniswapV3Poller(PoolPoller):
             if time.time() < self._backoff_until[meta.pool_address]:
                 continue
             pools_by_net[meta.network].append(meta)
+        # issue RPCs concurrently per network to stay within staleness window
         for network, metas in pools_by_net.items():
-            for meta in metas:
-                state = await self.rpc.submit_pool_state(meta.network, meta.pool_address)
-                if not state:
+            futs = [self.rpc.submit_pool_state(meta.network, meta.pool_address) for meta in metas]
+            states = await asyncio.gather(*futs, return_exceptions=True)
+            for meta, state in zip(metas, states):
+                if isinstance(state, Exception) or not state:
                     self._backoff_until[meta.pool_address] = time.time() + 5
                     metrics.INGEST_ERRORS.labels(type="poll").inc()
                     continue
@@ -79,13 +82,19 @@ class UniswapV3Poller(PoolPoller):
                 sqrt_price_x96, tick = decode_slot0(slot0_raw)
                 metrics.INGEST_RPC_CALLS.labels(network=meta.network, method="pool_state").inc()
                 price = price_from_sqrt(sqrt_price_x96, meta.dec0, meta.dec1)
+                # RPC returns hex strings; normalize liquidity to ints to avoid ValueError
+                try:
+                    liq_int = int(liq, 16) if isinstance(liq, str) else int(liq)
+                except Exception:
+                    metrics.INGEST_ERRORS.labels(type="poll_decode").inc()
+                    continue
                 results.append(
                     PoolState(
                         pool_meta=meta,
                         sqrt_price_x96=str(sqrt_price_x96),
                         tick=int(tick),
-                        liquidity=str(liq),
-                        liquidity_int=int(liq),
+                        liquidity=str(liq_int),
+                        liquidity_int=liq_int,
                         price=price,
                         block_number=state.get("block_number", 0) or 0,
                         timestamp_ms=now_ms,

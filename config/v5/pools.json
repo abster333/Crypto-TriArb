@@ -1,901 +1,16 @@
 {
   "pairs": [
     {
-      "id": "WETHUSDT",
-      "token0": "WETH",
-      "token1": "USDT",
+      "id": "ESPORTSWBNB",
+      "token0": "ESPORTS",
+      "token1": "WBNB",
       "pools": {
-        "uniswap_v3": {
-          "address": "0xc7bbec68d12a0d1830360f8ec58fa599ba1b0e9b",
+        "pancakeswap-v3-bsc": {
+          "address": "0x5bb59bb9371cbec158ed602d5f3cf1ad1c9b4462",
           "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
             "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "USDCWETH",
-      "token0": "USDC",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xe0554a476a092703abdb3ef35c80e0d76d32939f",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "WETHUSDC",
-      "token0": "WETH",
-      "token1": "USDC",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 500
-          }
-        }
-      }
-    },
-    {
-      "id": "WETHUSDT",
-      "token0": "WETH",
-      "token1": "USDT",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x11b815efb8f581194ae79006d24e0d814b7697f6",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 500
-          }
-        }
-      }
-    },
-    {
-      "id": "WBTCUSDT",
-      "token0": "WBTC",
-      "token1": "USDT",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x56534741cd8b152df6d48adf7ac51f75169a83b2",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 500
-          }
-        }
-      }
-    },
-    {
-      "id": "DAIWETH",
-      "token0": "DAI",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x60594a405d53811d3bc4766596efd80fd545a270",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 500
-          }
-        }
-      }
-    },
-    {
-      "id": "WBTCWETH",
-      "token0": "WBTC",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x4585fe77225b41b697c938b018e2ac67ac5a20c0",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 500
-          }
-        }
-      }
-    },
-    {
-      "id": "WBTCUSDC",
-      "token0": "WBTC",
-      "token1": "USDC",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x9a772018fbd77fcd2d25657e5c547baff3fd7d16",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 500
-          }
-        }
-      }
-    },
-    {
-      "id": "LINKWETH",
-      "token0": "LINK",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x5d4f3c6fa16908609bac31ff148bd002aa6b8c83",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 500
-          }
-        }
-      }
-    },
-    {
-      "id": "WETHUSDT",
-      "token0": "WETH",
-      "token1": "USDT",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x4e68ccd3e89f51c3074ca5072bbac773960dfa36",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "USDCUSDT",
-      "token0": "USDC",
-      "token1": "USDT",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x3416cf6c708da44db2624d63ea0aaef7113527c6",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "LINEAUSDC",
-      "token0": "LINEA",
-      "token1": "USDC",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xc6360a062ad0ceb937198a6e23fe33494f9c80a8",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "AAVEWETH",
-      "token0": "AAVE",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x5ab53ee1d50eef2c1dd3d5402789cd27bb52c1bb",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "ENAWETH",
-      "token0": "ENA",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xae4045ffeddf61d570e6d1fe2d71ded1a2e85a88",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 500
-          }
-        }
-      }
-    },
-    {
-      "id": "USDCWETH",
-      "token0": "USDC",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "WSTETHWETH",
-      "token0": "WSTETH",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x109830a1aaad605bbf02a9dfa7b0b92ec2fb7daa",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "SPXWETH",
-      "token0": "SPX",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x7c706586679af2ba6d1a9fc2da9c6af59883fdd3",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "PAXGUSDC",
-      "token0": "PAXG",
-      "token1": "USDC",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x5ae13baaef0620fdae1d355495dc51a17adb4082",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 500
-          }
-        }
-      }
-    },
-    {
-      "id": "XAUTUSDT",
-      "token0": "XAUT",
-      "token1": "USDT",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x6546055f46e866a4b9a4a13e81273e3152bae5da",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 500
-          }
-        }
-      }
-    },
-    {
-      "id": "LINKUSDC",
-      "token0": "LINK",
-      "token1": "USDC",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xfad57d2039c21811c8f2b5d5b65308aa99d31559",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "WLFIWETH",
-      "token0": "WLFI",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xcdf9f50519eb0a9995730ddb6e7d3a8b1d8ffa07",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "TITANXWETH",
-      "token0": "TITANX",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xc45a81bc23a64ea556ab4cdf08a86b61cdceea8b",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 10000
-          }
-        }
-      }
-    },
-    {
-      "id": "WBTCUSDT",
-      "token0": "WBTC",
-      "token1": "USDT",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x9db9e0e53058c89e5b94e29621a205198648425b",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "1INCHLINK",
-      "token0": "1INCH",
-      "token1": "LINK",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x28028cb848361930d2dc1f502439050a6ee5e4c2",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "RETHWETH",
-      "token0": "RETH",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x553e9c493678d8606d6a5ba284643db2110df823",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "TBTCWBTC",
-      "token0": "TBTC",
-      "token1": "WBTC",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x73a38006d23517a1d383c88929b2014f8835b38b",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "WBTCUSDC",
-      "token0": "WBTC",
-      "token1": "USDC",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x99ac8ca7087fa4a2a1fb6357269965a2014abc35",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "DAIUSDT",
-      "token0": "DAI",
-      "token1": "USDT",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x48da0965ab2d2cbf1c17c09cfb5cbe67ad5b1406",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "QNTWETH",
-      "token0": "QNT",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x24ee2c6b9597f035088cda8575e9d5e15a84b9df",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "STRKWETH",
-      "token0": "STRK",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xac4fd96fcf729390a3c8044422a529028ec36751",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 10000
-          }
-        }
-      }
-    },
-    {
-      "id": "USDTERA",
-      "token0": "USDT",
-      "token1": "ERA",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x4d63da0421ab1d71fbf2a3d3c8625a66d9b9799d",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "AAVEUNI",
-      "token0": "AAVE",
-      "token1": "UNI",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x59c38b6775ded821f010dbd30ecabdcf84e04756",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "SUSDEUSDT",
-      "token0": "SUSDE",
-      "token1": "USDT",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x7eb59373d63627be64b42406b108b602174b4ccc",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "WLFIUSDT",
-      "token0": "WLFI",
-      "token1": "USDT",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x813b1bce815c15774f85f8ff6b0dcbbb75a1d995",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "XAUTWBTC",
-      "token0": "XAUT",
-      "token1": "WBTC",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xe8a1f39c16eea2844e98f951d711bb4bb31557ad",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "ANIMEWETH",
-      "token0": "ANIME",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x38fa0e36a9eb335ca00dbd6d0f203b0bd72ce3b6",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "XUSDWETH",
-      "token0": "XUSD",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x3c385b0ce5b48958ffab12ffd8da14d433d7b885",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 500
-          }
-        }
-      }
-    },
-    {
-      "id": "XUSDUSDC",
-      "token0": "XUSD",
-      "token1": "USDC",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xcfe41687742cf4926ed857410fea9d799a85d85f",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 500
-          }
-        }
-      }
-    },
-    {
-      "id": "CBBTCWBTC",
-      "token0": "CBBTC",
-      "token1": "WBTC",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xe8f7c89c5efa061e340f2d2f206ec78fd8f7e124",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "TORUSTITANX",
-      "token0": "TORUS",
-      "token1": "TITANX",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x7ff1f30f6e7eec2ff3f0d1b60739115bdf88190f",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 10000
-          }
-        }
-      }
-    },
-    {
-      "id": "SEIUSDC",
-      "token0": "SEI",
-      "token1": "USDC",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xf8e349d1d827a6edf17ee673664cfad4ca78c533",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "MNTUSDE",
-      "token0": "MNT",
-      "token1": "USDE",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x9aac67deef711d438ad711ae495b8cb43a6ee1a8",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "FLUIDWETH",
-      "token0": "FLUID",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xcba27c8e7115b4eb50aa14999bc0866674a96ecb",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "TELWETH",
-      "token0": "TEL",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xf359492d26764481002ed88bd2acae83ca50b5c9",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "FOOMWETH",
-      "token0": "FOOM",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x5cd0ad98ba6288ed7819246a1ebc0386c32c314b",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 500
-          }
-        }
-      }
-    },
-    {
-      "id": "WTAOWETH",
-      "token0": "WTAO",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x2982d3295a0e1a99e6e88ece0e93ffdfc5c761ae",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "BITCOINWETH",
-      "token0": "BITCOIN",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x25392d7129040710f152174af5019004a6f9b18d",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "UNIWETH",
-      "token0": "UNI",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x1d42064fc4beb5f8aaf85f4617ae8b3b5b8bd801",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "SETHWETH",
-      "token0": "SETH",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x732ff5d2847d03cd0da6741282cc9e88e8ebfbf8",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "WBTCWETH",
-      "token0": "WBTC",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xcbcdf9626bc03e24f779434178a73a0b4bad62ed",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "COVIDWETH",
-      "token0": "COVID",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x4ba530e8bba1bcfd34eb9ab46d9b8ec3a4041d3f",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 10000
-          }
-        }
-      }
-    },
-    {
-      "id": "FUELWETH",
-      "token0": "FUEL",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xc7ec87aeb9d1129c42123859220c525aba1ca617",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "ETHFIWETH",
-      "token0": "ETHFI",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x06f00544c0bc62e6db10f46d370dfccdc23d8189",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "DAIWETH",
-      "token0": "DAI",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xc2e9f25be6257c210d7adf0d4cd6e3e881ba25f8",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "ORXTITANX",
-      "token0": "ORX",
-      "token1": "TITANX",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x2a216495584e406c39582d3ee583aeda937beba6",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 10000
-          }
-        }
-      }
-    },
-    {
-      "id": "NMRWETH",
-      "token0": "NMR",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x4b1f895066058662b9fa885e87a4e4159be0798a",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "USDEUSDC",
-      "token0": "USDE",
-      "token1": "USDC",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xe6d7ebb9f1a9519dc06d557e03c522d53520e76a",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "HEXWETH",
-      "token0": "HEX",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0x9e0905249ceefffb9605e034b534544684a58be6",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "LDOWETH",
-      "token0": "LDO",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xa3f558aebaecaf0e11ca4b2199cc5ed341edfd74",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
-          }
-        }
-      }
-    },
-    {
-      "id": "LINKWETH",
-      "token0": "LINK",
-      "token1": "WETH",
-      "pools": {
-        "uniswap_v3": {
-          "address": "0xa6cc3c2531fdaa6ae1a3ca84c2855806728693e8",
-          "metadata": {
-            "platform": "UNISWAP_V3",
-            "network": "eth",
-            "fee": 3000
           }
         }
       }
@@ -907,21 +22,6 @@
       "pools": {
         "pancakeswap-v3-bsc": {
           "address": "0x172fcd41e0913e95784454622d1c3724f546f849",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "ATUSDT",
-      "token0": "AT",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x0022f0dcd574a1e646250eebd086781823434504",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
@@ -946,357 +46,12 @@
       }
     },
     {
-      "id": "ESPORTSWBNB",
-      "token0": "ESPORTS",
-      "token1": "WBNB",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x5bb59bb9371cbec158ed602d5f3cf1ad1c9b4462",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
       "id": "USDCWBNB",
       "token0": "USDC",
       "token1": "WBNB",
       "pools": {
         "pancakeswap-v3-bsc": {
           "address": "0xf2688fb5b81049dfb7703ada5e770543770612c4",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "AIOUSDT",
-      "token0": "AIO",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x97620e003c03381eacbde7135f28d94303bb5672",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "BOBUSDT",
-      "token0": "BOB",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x1d11060dce19cbc2650f6a84f728fc0e54cf7faa",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "COAIUSDC",
-      "token0": "COAI",
-      "token1": "USDC",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x778121b464151fe5d931587c457e48fcaaa0dc7a",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "QUQUSDT",
-      "token0": "QUQ",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x9485ff32b6b4444c21d5abe4d9a2283d127075a2",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "$BANANAWBNB",
-      "token0": "$BANANA",
-      "token1": "WBNB",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "AIAUSDC",
-      "token0": "AIA",
-      "token1": "USDC",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x6531a0190c9977e48b3a5c8bc5226a6cd821d18c",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "AVLUSDT",
-      "token0": "AVL",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x7192966c6d3ab630ee60dbd4c1b39e9e8267f8cf",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "SOONWBNB",
-      "token0": "SOON",
-      "token1": "WBNB",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x0b2eb4332a15e5165477aad2c79721925920a383",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "SLXUSDT",
-      "token0": "SLX",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x4d9541bcfc450b15c458877c97848c7a96898f6c",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "USD1WBNB",
-      "token0": "USD1",
-      "token1": "WBNB",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x3d7c319090edf2293608a0f9a786317c66d320f8",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "B2WBNB",
-      "token0": "B2",
-      "token1": "WBNB",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0xc1a780989734a0e5df875cebe410748562e1c5e6",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "TRADOORUSDT",
-      "token0": "TRADOOR",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x924e62a3689e7b94f397e61ac796dabfea32e93b",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "ETHWBNB",
-      "token0": "ETH",
-      "token1": "WBNB",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x62fcb3c1794fb95bd8b1a97f6ad5d8a7e4943a1e",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "BASWBNB",
-      "token0": "BAS",
-      "token1": "WBNB",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0xa341e8e8ee6bf97fa1d18c2d12f00555dc78207e",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "PLANCKUSDT",
-      "token0": "PLANCK",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0xc36a3838c44d397ab3e9d88e5997a0eb942a2714",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "USDTBTCB",
-      "token0": "USDT",
-      "token1": "BTCB",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x247f51881d1e3ae0f759afb801413a6c948ef442",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "VELOUSDC",
-      "token0": "VELO",
-      "token1": "USDC",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x258474cd00b4f42842ed424e6c2c1da0087031b8",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "BDXNUSDT",
-      "token0": "BDXN",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x44fb9c6a8dc3eb87a2852ddf4385b3fe4c3fdf9c",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "BSUUSDT",
-      "token0": "BSU",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0xbee2c57e3a11220e2b948e26965daaa9dfd87a4a",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "BTRUSDT",
-      "token0": "BTR",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x787abd73593bed588852163402d191c302c7f8b6",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "0GUSDT",
-      "token0": "0G",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x808a3f77c4be4e1ae5dab0f63cca2cbfde281dc5",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "UBUSDC",
-      "token0": "UB",
-      "token1": "USDC",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x916f992df86795f24de6c268cfb9031fbb1155da",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
@@ -1321,12 +76,12 @@
       }
     },
     {
-      "id": "STBLUSDC",
-      "token0": "STBL",
+      "id": "COAIUSDC",
+      "token0": "COAI",
       "token1": "USDC",
       "pools": {
         "pancakeswap-v3-bsc": {
-          "address": "0x90166b5795250fe7f0831e844121cc91799787e9",
+          "address": "0x778121b464151fe5d931587c457e48fcaaa0dc7a",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
@@ -1336,12 +91,12 @@
       }
     },
     {
-      "id": "XPLUSDT",
-      "token0": "XPL",
+      "id": "ATUSDT",
+      "token0": "AT",
       "token1": "USDT",
       "pools": {
         "pancakeswap-v3-bsc": {
-          "address": "0x50203df8efcddba9755c886f086b9b2d537a15f9",
+          "address": "0x0022f0dcd574a1e646250eebd086781823434504",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
@@ -1351,12 +106,12 @@
       }
     },
     {
-      "id": "AICELLUSDT",
-      "token0": "AICELL",
+      "id": "QUQUSDT",
+      "token0": "QUQ",
       "token1": "USDT",
       "pools": {
         "pancakeswap-v3-bsc": {
-          "address": "0x430d8186bf67067c9d9eba8899983dd1176a02d9",
+          "address": "0x9485ff32b6b4444c21d5abe4d9a2283d127075a2",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
@@ -1366,27 +121,57 @@
       }
     },
     {
-      "id": "XNYWBNB",
-      "token0": "XNY",
+      "id": "TRADOORUSDT",
+      "token0": "TRADOOR",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x924e62a3689e7b94f397e61ac796dabfea32e93b",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "AVLUSDT",
+      "token0": "AVL",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x7192966c6d3ab630ee60dbd4c1b39e9e8267f8cf",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "MYWBNB",
+      "token0": "MY",
       "token1": "WBNB",
       "pools": {
         "pancakeswap-v3-bsc": {
-          "address": "0x7ccc3010e52fbca54467ff68eec4be78420571c5",
+          "address": "0x0bc03c0d7e62a0bd2477c317bdf30fe9463cb388",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
-            "fee": 100
+            "fee": 2500
           }
         }
       }
     },
     {
-      "id": "WODUSDT",
-      "token0": "WOD",
+      "id": "LABUSDT",
+      "token0": "LAB",
       "token1": "USDT",
       "pools": {
         "pancakeswap-v3-bsc": {
-          "address": "0xcf39e58ed4decc9ef7bdb2f9335602dc22be99b4",
+          "address": "0x2f62969a74159bfc9365d8cd29ae8f6d15582204",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
@@ -1396,27 +181,12 @@
       }
     },
     {
-      "id": "ALLOUSDT",
-      "token0": "ALLO",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x84354592cb82eac7fac65df4478ed1eebba0252c",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "BTCBWBNB",
-      "token0": "BTCB",
+      "id": "USD1WBNB",
+      "token0": "USD1",
       "token1": "WBNB",
       "pools": {
         "pancakeswap-v3-bsc": {
-          "address": "0x62edaf2a56c9fb55be5f9b1399ac067f6a37013b",
+          "address": "0x3d7c319090edf2293608a0f9a786317c66d320f8",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
@@ -1426,12 +196,12 @@
       }
     },
     {
-      "id": "TAKEWBNB",
-      "token0": "TAKE",
+      "id": "BOTWBNB",
+      "token0": "BOT",
       "token1": "WBNB",
       "pools": {
         "pancakeswap-v3-bsc": {
-          "address": "0x46bb9a29bfa5397b30a96a316875496ec2556dd2",
+          "address": "0x8b948b1c8366b4aa135755c6960047383e72c2c4",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
@@ -1441,12 +211,12 @@
       }
     },
     {
-      "id": "LIGHTUSDT",
-      "token0": "LIGHT",
-      "token1": "USDT",
+      "id": "AIAUSDC",
+      "token0": "AIA",
+      "token1": "USDC",
       "pools": {
         "pancakeswap-v3-bsc": {
-          "address": "0xae02717e94c9b5bae817601a49b4584f58324015",
+          "address": "0x6531a0190c9977e48b3a5c8bc5226a6cd821d18c",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
@@ -1456,12 +226,27 @@
       }
     },
     {
-      "id": "EVAAUSDT",
-      "token0": "EVAA",
+      "id": "BSUUSDT",
+      "token0": "BSU",
       "token1": "USDT",
       "pools": {
         "pancakeswap-v3-bsc": {
-          "address": "0x26deb24a2623cf54452ab5183e2c34551831d54d",
+          "address": "0xbee2c57e3a11220e2b948e26965daaa9dfd87a4a",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "BDXNUSDT",
+      "token0": "BDXN",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x44fb9c6a8dc3eb87a2852ddf4385b3fe4c3fdf9c",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
@@ -1486,12 +271,267 @@
       }
     },
     {
-      "id": "ASTERUSDT",
-      "token0": "ASTER",
+      "id": "HUSDT",
+      "token0": "H",
       "token1": "USDT",
       "pools": {
         "pancakeswap-v3-bsc": {
-          "address": "0x7e58f160b5b77b8b24cd9900c09a3e730215ac47",
+          "address": "0xef7d88d12b6393fe06f5f07d48d7b76511909e6b",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "VELOUSDC",
+      "token0": "VELO",
+      "token1": "USDC",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x258474cd00b4f42842ed424e6c2c1da0087031b8",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "SLXUSDT",
+      "token0": "SLX",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x4d9541bcfc450b15c458877c97848c7a96898f6c",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "BTRUSDT",
+      "token0": "BTR",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x787abd73593bed588852163402d191c302c7f8b6",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "INUSDT",
+      "token0": "IN",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x5bd808ab85c124f99080da5f864edcb39950ede5",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "XNYWBNB",
+      "token0": "XNY",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x7ccc3010e52fbca54467ff68eec4be78420571c5",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "$BANANAWBNB",
+      "token0": "$BANANA",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x7f51bbf34156ba802deb0e38b7671dc4fa32041d",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "FORESTWBNB",
+      "token0": "FOREST",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xf0601427e3bfc416bc7838fb9e15c6f0f56f4aa0",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "WODUSDT",
+      "token0": "WOD",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xcf39e58ed4decc9ef7bdb2f9335602dc22be99b4",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "UBUSDC",
+      "token0": "UB",
+      "token1": "USDC",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x916f992df86795f24de6c268cfb9031fbb1155da",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "BASWBNB",
+      "token0": "BAS",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xa341e8e8ee6bf97fa1d18c2d12f00555dc78207e",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "TAKEWBNB",
+      "token0": "TAKE",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x46bb9a29bfa5397b30a96a316875496ec2556dd2",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "ETHWBNB",
+      "token0": "ETH",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x62fcb3c1794fb95bd8b1a97f6ad5d8a7e4943a1e",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "BOOSTUSDC",
+      "token0": "BOOST",
+      "token1": "USDC",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x91e4b339d9add120f12e3884e007d8713cd5b70f",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "SQDUSDC",
+      "token0": "SQD",
+      "token1": "USDC",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x43256d0dcc2571e564311edb6d7e8f076a72fc46",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "HWBNB",
+      "token0": "H",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xbb537bed9f910ca18be6cf21e3a17f0311cd3890",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "STBLUSDC",
+      "token0": "STBL",
+      "token1": "USDC",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x90166b5795250fe7f0831e844121cc91799787e9",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "BAYUSDT",
+      "token0": "BAY",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x6fa17cf63ee02c665d7e9cb0458361e068799e50",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
@@ -1501,151 +541,16 @@
       }
     },
     {
-      "id": "MYXWBNB",
-      "token0": "MYX",
-      "token1": "WBNB",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x6ec31af1bb9a72aacec12e4ded508861b05f4503",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "ASTERUSDT",
-      "token0": "ASTER",
+      "id": "APDUSDT",
+      "token0": "APD",
       "token1": "USDT",
       "pools": {
         "pancakeswap-v3-bsc": {
-          "address": "0xe301a4bfeeb3e80e8499edff8dab6c5eb8fda6d1",
+          "address": "0x490d1dd5d6363fc7e392a37afedb289027b4d5cc",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "BOSUSDT",
-      "token0": "BOS",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x8ef2e070f9d73068a8f8066573c06713e5f614e2",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "QUSDT",
-      "token0": "Q",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x8bafe0bdd3eb9ae0539f5b32e771c1a72a189b7f",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "TAUSDT",
-      "token0": "TA",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0xfa7421f1ed6ad1548316a847e8437af7219a8f18",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "ZECUSDT",
-      "token0": "ZEC",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x6701b287c8170d6c290c6f4ef426782bd61ae310",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 500
-          }
-        }
-      }
-    },
-    {
-      "id": "CONSCIOUSWBNB",
-      "token0": "CONSCIOUS",
-      "token1": "WBNB",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x1e1c4e363aed9771bb5ef60100f7ddd04b325f74",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "CROSSUSDT",
-      "token0": "CROSS",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0xe6e51ea572502dbdf8b40834d0619f9a9144d3a5",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "BANKWBNB",
-      "token0": "BANK",
-      "token1": "WBNB",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0xee6ff918a1f68b5d2fdecb14b367fa2eb5c6951c",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "ERAUSDT",
-      "token0": "ERA",
-      "token1": "USDT",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x55d0119a43a0e2c54fd6eb1f17e3b883eedba602",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
+            "fee": 2500
           }
         }
       }
@@ -1666,42 +571,12 @@
       }
     },
     {
-      "id": "MITOWBNB",
-      "token0": "MITO",
-      "token1": "WBNB",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0xdaf84e35ca400d7641456e53b6a8a30cccecfd5b",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "ETHUSDT",
-      "token0": "ETH",
+      "id": "AIOUSDT",
+      "token0": "AIO",
       "token1": "USDT",
       "pools": {
         "pancakeswap-v3-bsc": {
-          "address": "0x9f599f3d64a9d99ea21e68127bb6ce99f893da61",
-          "metadata": {
-            "platform": "PANCAKESWAP-V3-BSC",
-            "network": "bsc",
-            "fee": 100
-          }
-        }
-      }
-    },
-    {
-      "id": "USDTUSDC",
-      "token0": "USDT",
-      "token1": "USDC",
-      "pools": {
-        "pancakeswap-v3-bsc": {
-          "address": "0x92b7807bf19b7dddf89b706143896d05228f3121",
+          "address": "0x97620e003c03381eacbde7135f28d94303bb5672",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
@@ -1726,12 +601,12 @@
       }
     },
     {
-      "id": "HUSDT",
-      "token0": "H",
-      "token1": "USDT",
+      "id": "MERLUSDC",
+      "token0": "MERL",
+      "token1": "USDC",
       "pools": {
         "pancakeswap-v3-bsc": {
-          "address": "0xef7d88d12b6393fe06f5f07d48d7b76511909e6b",
+          "address": "0xbdccafb234be6dc2545b0c25b0a5f5d9d1124228",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
@@ -1741,31 +616,211 @@
       }
     },
     {
-      "id": "PORT3USDT",
-      "token0": "PORT3",
-      "token1": "USDT",
+      "id": "USDTBTCB",
+      "token0": "USDT",
+      "token1": "BTCB",
       "pools": {
         "pancakeswap-v3-bsc": {
-          "address": "0xf94a160d0bd3735e77c5e1c459ae7737d3507a40",
+          "address": "0x247f51881d1e3ae0f759afb801413a6c948ef442",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
-            "fee": 10000
+            "fee": 100
           }
         }
       }
     },
     {
-      "id": "TAGWBNB",
-      "token0": "TAG",
-      "token1": "WBNB",
+      "id": "BOBUSDT",
+      "token0": "BOB",
+      "token1": "USDT",
       "pools": {
         "pancakeswap-v3-bsc": {
-          "address": "0xf0750c373ebbb3baeef7e03d8300caad1983d67c",
+          "address": "0x1d11060dce19cbc2650f6a84f728fc0e54cf7faa",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
-            "fee": 500
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "LIGHTUSDT",
+      "token0": "LIGHT",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xae02717e94c9b5bae817601a49b4584f58324015",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "TIMIUSDT",
+      "token0": "TIMI",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x6f48464d988b002b4232d5584722ff3e2b8844fb",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "ETHUSDT",
+      "token0": "ETH",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x9f599f3d64a9d99ea21e68127bb6ce99f893da61",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "YALAUSDC",
+      "token0": "YALA",
+      "token1": "USDC",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x8481d46579164e3a5797c5c484d9f8d87c25342f",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "XPLUSDT",
+      "token0": "XPL",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x50203df8efcddba9755c886f086b9b2d537a15f9",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "INWBNB",
+      "token0": "IN",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xc4dc171d499b3f5340bffed8433bddcec8d33b04",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "ARIAUSDT",
+      "token0": "ARIA",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xa5dbeaf16fc031eae92175974f8d0a439be4ad17",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "BTCBWBNB",
+      "token0": "BTCB",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x62edaf2a56c9fb55be5f9b1399ac067f6a37013b",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "SOONWBNB",
+      "token0": "SOON",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x0b2eb4332a15e5165477aad2c79721925920a383",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "SERAPHUSDT",
+      "token0": "SERAPH",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xd5b642646a6e40090d5d61ca11a78ee2f6e0ef14",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "USDTUSDC",
+      "token0": "USDT",
+      "token1": "USDC",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x92b7807bf19b7dddf89b706143896d05228f3121",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "PINGPONGUSDT",
+      "token0": "PINGPONG",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x8e6601b49a2c73fe64d01c057b796ca05f2a7348",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
           }
         }
       }
@@ -1786,16 +841,931 @@
       }
     },
     {
-      "id": "TOSHIUSDT",
-      "token0": "TOSHI",
+      "id": "XPINUSDT",
+      "token0": "XPIN",
       "token1": "USDT",
       "pools": {
         "pancakeswap-v3-bsc": {
-          "address": "0x27820f8b2e7c5dbe1eef6805577c222afde1a191",
+          "address": "0x08debfc510a2eb0148107da7ab8e96531323f4d4",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "PLANCKUSDT",
+      "token0": "PLANCK",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xc36a3838c44d397ab3e9d88e5997a0eb942a2714",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "CROSSUSDT",
+      "token0": "CROSS",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xe6e51ea572502dbdf8b40834d0619f9a9144d3a5",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "AICELLUSDT",
+      "token0": "AICELL",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x430d8186bf67067c9d9eba8899983dd1176a02d9",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "DUSDUSDT",
+      "token0": "DUSD",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xb67e5eaf770a384ab28029d08b9bc5ebe32beb0f",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "CORLUSDT",
+      "token0": "CORL",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xd17c012f90838ef526656468124c63b466acedcd",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "BLUAIUSDT",
+      "token0": "BLUAI",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xba20fe9506a904a30ebb8b7c348f4969f5a5ea07",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "MYXWBNB",
+      "token0": "MYX",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x6ec31af1bb9a72aacec12e4ded508861b05f4503",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "USD1USDT",
+      "token0": "USD1",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x9c4ee895e4f6ce07ada631c508d1306db7502cce",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "EVAAUSDT",
+      "token0": "EVAA",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x26deb24a2623cf54452ab5183e2c34551831d54d",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "B2WBNB",
+      "token0": "B2",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xc1a780989734a0e5df875cebe410748562e1c5e6",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "KABOSUWBNB",
+      "token0": "KABOSU",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xbddd9957cb50e8fd20e0362d01874b4525cb68e5",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 2500
+          }
+        }
+      }
+    },
+    {
+      "id": "FFUSDT",
+      "token0": "FF",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x9f8f4615ff5143aee365fa34f34196fb85be7650",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "IDOLWBNB",
+      "token0": "IDOL",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xfff4857a955b2b460c27fd431aa5a85fabca5559",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "RESOLVUSDT",
+      "token0": "RESOLV",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xee524f8541f25c17126a80809399e041fdaff4ff",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "SUBHUBUSDT",
+      "token0": "SUBHUB",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x4d6063a85e3de0c21eaebd21bf7f1bdc186317ab",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "CONSCIOUSWBNB",
+      "token0": "CONSCIOUS",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x1e1c4e363aed9771bb5ef60100f7ddd04b325f74",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "QUSDT",
+      "token0": "Q",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x8bafe0bdd3eb9ae0539f5b32e771c1a72a189b7f",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "POPUSDT",
+      "token0": "POP",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xe5ce5bc4785cd2a246151364f5a190cee3fdb142",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "PALWBNB",
+      "token0": "PAL",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x194fb07e51eeb6fec9eae4edad6523f8dff2c7ed",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "NBUSDT",
+      "token0": "NB",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x4d7ba641cb088c142f68aca00bd2b285150006b6",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "CAPXUSDT",
+      "token0": "CAPX",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x39aae24d8c04e6aa9405fa7583a9e7bacb390ab7",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "ALLOUSDT",
+      "token0": "ALLO",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x84354592cb82eac7fac65df4478ed1eebba0252c",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "ZEUSWBNB",
+      "token0": "ZEUS",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x5db04ea767d9fa92b9c06d7752226be7bc2e546f",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "USD1SAHARA",
+      "token0": "USD1",
+      "token1": "SAHARA",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x7c1f9f04c87aca8364d38ffee99cd03a96d1febe",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "ELDEWBNB",
+      "token0": "ELDE",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xd6f20a50b022ea3e5899c5069c542a9a33e5d240",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "0GUSDT",
+      "token0": "0G",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x808a3f77c4be4e1ae5dab0f63cca2cbfde281dc5",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "TCOMUSDT",
+      "token0": "TCOM",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x7f0b9a92fe7abbc64d38cbd02a3c39191657b8bb",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "TOWNUSDT",
+      "token0": "TOWN",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xc423bc022d485476e021c79c4368feb39c0eb110",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 2500
+          }
+        }
+      }
+    },
+    {
+      "id": "ASTERUSDT",
+      "token0": "ASTER",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x7e58f160b5b77b8b24cd9900c09a3e730215ac47",
           "metadata": {
             "platform": "PANCAKESWAP-V3-BSC",
             "network": "bsc",
             "fee": 500
+          }
+        }
+      }
+    },
+    {
+      "id": "HEMIUSDT",
+      "token0": "HEMI",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x1b54cd932b6b751803c996cbef36280b53795f81",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "CAKEWBNB",
+      "token0": "CAKE",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x1e213600fa9317feac4ef4087acdf5d0e25d7187",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "USDTWBNB",
+      "token0": "USDT",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x36696169c63e42cd08ce11f5deebbcebae652050",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 500
+          }
+        }
+      }
+    },
+    {
+      "id": "VELOWBNB",
+      "token0": "VELO",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x8488664e52df2f6b3772042acec281447b063733",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "ASTERUSDT",
+      "token0": "ASTER",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xe301a4bfeeb3e80e8499edff8dab6c5eb8fda6d1",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "HANAUSDT",
+      "token0": "HANA",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xd21bc2291c1aef340f5265e257b18aa5dafed759",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "AOPUSDT",
+      "token0": "AOP",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xca3f029a70d5d90000e614afd29e5c833f33cea5",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "DAMUSDT",
+      "token0": "DAM",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xc791051af95ab0f816d3bf2e3e27021be9472622",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "UUSDT",
+      "token0": "U",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xe9e4ed350de777cc22b5210b624f670c7177e173",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "9AIOT",
+      "token0": "9",
+      "token1": "AIOT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xf149fbe3c1f22825cf56d78c9d925f70d5dee865",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "BUSD1",
+      "token0": "B",
+      "token1": "USD1",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x0f0cf38f67ed6fb00881cdb815e25441f7f022e0",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "BANKWBNB",
+      "token0": "BANK",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xee6ff918a1f68b5d2fdecb14b367fa2eb5c6951c",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "PORT3USDT",
+      "token0": "PORT3",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xf127725dadf4e6c6219db8c634b2dffe72ad0b90",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 500
+          }
+        }
+      }
+    },
+    {
+      "id": "SKATEUSDC",
+      "token0": "SKATE",
+      "token1": "USDC",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x4c9b6e5ec402178046e1c426838c4916eb830534",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "TAGUSD1",
+      "token0": "TAG",
+      "token1": "USD1",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x7a4420381162847a2d98511d41be1b210a1284f5",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "ZECUSDT",
+      "token0": "ZEC",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x6701b287c8170d6c290c6f4ef426782bd61ae310",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 500
+          }
+        }
+      }
+    },
+    {
+      "id": "HUMAUSDT",
+      "token0": "HUMA",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x7874f0ecd450a5f06acb85543fe1d0d48e1c525f",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "MITOWBNB",
+      "token0": "MITO",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xdaf84e35ca400d7641456e53b6a8a30cccecfd5b",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "0X586AUSDT",
+      "token0": "0X586A",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xa047e4455ee40ca83a2f4220de8d2bf40d76d18c",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "LITKEYUSDT",
+      "token0": "LITKEY",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x4bae9cb33c90c4477776890782cb62568cbeb16a",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "LOTWBNB",
+      "token0": "LOT",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x532f514fa9038a7bfa9da1740d77b99c1e9e7d21",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "TAUSDT",
+      "token0": "TA",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xfa7421f1ed6ad1548316a847e8437af7219a8f18",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "FROGGIEWBNB",
+      "token0": "FROGGIE",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x0da56439ecd700df76a62e6ed84204bfe2c633b1",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 2500
+          }
+        }
+      }
+    },
+    {
+      "id": "BOOMUSDT",
+      "token0": "BOOM",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x35e4299efe62450dfb7db57e1e33005c7c889889",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 500
+          }
+        }
+      }
+    },
+    {
+      "id": "ETHUSDT",
+      "token0": "ETH",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xbe141893e4c6ad9272e8c04bab7e6a10604501a5",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 500
+          }
+        }
+      }
+    },
+    {
+      "id": "ONUSDT",
+      "token0": "ON",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x4620f5c127a6055fbebb1f71327d60ff079c9060",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "PLAYUSDT",
+      "token0": "PLAY",
+      "token1": "USDT",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x3be400e891786c958c22e121abe71599c576effc",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "WODWBNB",
+      "token0": "WOD",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xe9691394a7a62f78ef4aa10b571140acfdd4c91f",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "GOATEDUSDC",
+      "token0": "GOATED",
+      "token1": "USDC",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0xc744be8190e2a4d9058294afe86d43ad9fb118e7",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "BGSCWBNB",
+      "token0": "BGSC",
+      "token1": "WBNB",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x8f0bd6b22a9000e550e5dc31313d128abe40fcbd",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "LIBERTYUSD1",
+      "token0": "LIBERTY",
+      "token1": "USD1",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x751817452f48fb01980f7931290a7f4514764353",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "ETHUSDC",
+      "token0": "ETH",
+      "token1": "USDC",
+      "pools": {
+        "pancakeswap-v3-bsc": {
+          "address": "0x62cf00528cb7af872c1f9dd426e655c903f16770",
+          "metadata": {
+            "platform": "PANCAKESWAP-V3-BSC",
+            "network": "bsc",
+            "fee": 100
           }
         }
       }

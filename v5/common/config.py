@@ -62,6 +62,9 @@ class Settings(BaseSettings):
     polygon_rpc_url: str | None = Field(None, alias="POLYGON_RPC_URL")
     ethereum_ws_url: str | None = Field(None, alias="ETHEREUM_WS_URL")
     bsc_ws_url: str | None = Field(None, alias="BSC_WS_URL")
+    # optional quoter overrides
+    ethereum_quoter_addr: str | None = Field(None, alias="ETH_QUOTER_ADDR")
+    bsc_quoter_addr: str | None = Field(None, alias="BSC_QUOTER_ADDR")
     # legacy aliases
     alchemy_ws_url: str | None = Field(None, alias="ALCHEMY_WS_URL")
     strategy_tri_threshold_bps: float = Field(10.0, alias="STRATEGY_TRI_THRESHOLD_BPS")
@@ -71,6 +74,8 @@ class Settings(BaseSettings):
     enable_poll_fallback: bool = Field(False, alias="ENABLE_POLL_FALLBACK")
     ws_sub_batch_size: int = Field(30, alias="WS_SUB_BATCH_SIZE")
     top_pools_per_exchange: int = Field(50, alias="V5_TOP_POOLS")
+    rpc_max_qps: int = Field(8, alias="RPC_MAX_QPS")
+    rpc_max_batch_size: int = Field(20, alias="RPC_MAX_BATCH_SIZE")
 
     # Load environment from standard dot-env files if present; ignore unrelated keys
     model_config = SettingsConfigDict(env_file=(".env", ".devstack-env"), case_sensitive=False, extra="ignore")

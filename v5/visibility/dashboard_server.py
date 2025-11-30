@@ -10,6 +10,7 @@ from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 
 from v5.state_store.state_reader import StateReader
 from v5.simulator.realtime_detector import RealtimeArbDetector
+from v5.common.models import Opportunity
 
 
 _HTML = """
@@ -61,6 +62,81 @@ _HTML = """
             <td>${r.liquidity ?? ''}</td>
             <td>${age}</td>
             <td>${r.address}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+        document.getElementById('updated').textContent = 'Updated: ' + new Date().toLocaleTimeString();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    refresh();
+    setInterval(refresh, 2000);
+  </script>
+</body>
+</html>
+"""
+
+# Live cycles / opportunities page (lightweight, auto-refresh)
+_HTML_CYCLES = """
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>DEX Cycles</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 16px; background: #0b1021; color: #e7ecf3; }
+    h2 { margin-bottom: 6px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { padding: 8px 10px; border-bottom: 1px solid #222c45; text-align: left; }
+    th { background: #14213d; position: sticky; top: 0; }
+    tr:nth-child(even) { background: #11182f; }
+    .stale { color: #ffb347; }
+    .meta { color: #8aa0c8; font-size: 12px; margin-bottom: 10px; }
+    .pill { padding: 2px 6px; border-radius: 6px; font-size: 12px; background: #1d2b4f; color: #9cd3ff; }
+    .neg { color: #ff8a8a; }
+    .pos { color: #7cf29c; }
+    .leg { display: block; font-size: 12px; color: #b9c6e4; }
+  </style>
+</head>
+<body>
+  <h2>Live Cycles</h2>
+  <div class="meta">All cycles (auto-refresh 2s, includes negative/invalid)</div>
+  <div id="updated">Loading...</div>
+  <table id="grid">
+    <thead>
+      <tr>
+        <th>Cycle</th><th>Status</th><th>ROI (bps)</th><th>Profit (start token)</th><th>Size Cap (start token)</th><th>Age (s)</th><th>Legs</th><th>Quoter</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <script>
+    async function refresh() {
+      try {
+        const res = await fetch('/api/cycles/live?limit=500');
+        const rows = await res.json();
+        const tbody = document.querySelector('#grid tbody');
+        tbody.innerHTML = '';
+        rows.forEach(r => {
+          const tr = document.createElement('tr');
+          const roi = (r.roi_bps ?? 0).toFixed(2);
+          const cls = roi >= 0 ? 'pos' : 'neg';
+          const legsHtml = (r.legs || []).map(l => `<span class="leg">${l.token_in}->${l.token_out} @ ${String(l.pool||'').slice(0,8)} | impact=${(l.price_impact?.toFixed ? l.price_impact.toFixed(6) : (l.price_impact ?? ''))}</span>`).join('');
+          const quoter = r.quoter
+            ? (r.quoter.error
+                ? `error=${r.quoter.error}`
+                : `in=${r.quoter.amount_in || ''}, out=${r.quoter.amount_out || ''}, profit=${r.quoter.profit || ''}, roi_bps=${r.quoter.roi_bps || ''}`)
+            : '';
+          tr.innerHTML = `
+            <td>${r.cycle}</td>
+            <td><span class="pill">${r.status || ''}${r.reason ? ' ('+r.reason+')' : ''}</span></td>
+            <td class="${cls}">${roi}</td>
+            <td>${r.profit ?? ''}</td>
+            <td>${r.size_cap ?? ''}</td>
+            <td>${r.max_age_ms != null ? (r.max_age_ms/1000).toFixed(1) : ''}</td>
+            <td>${legsHtml}</td>
+            <td>${quoter}</td>
           `;
           tbody.appendChild(tr);
         });
@@ -211,18 +287,18 @@ class DashboardServer:
             return [opp.model_dump() for opp in self.detector.get_recent_opportunities(limit)]
 
         @self.app.get("/cycles")
-        async def cycles():
-            cycles = getattr(self.detector.scenario_runner, "cycles", [])
-            return {
-                "cycles": [
-                    {
-                        "tokens": cyc,
-                        "pools": len(cyc),
-                        "status": "active",
-                    }
-                    for cyc in cycles
-                ]
-            }
+        async def cycles_page():
+            return HTMLResponse(_HTML_CYCLES)
+
+        @self.app.get("/api/cycles/live")
+        async def api_cycles_live(limit: int = 500):
+            """
+            Returns ALL cycles with their latest simulated ROI, even if negative or missing data.
+            """
+            data = await self.detector.scenario_runner.snapshot_cycles()
+            if limit:
+                data = data[:limit]
+            return data
 
         @self.app.get("/data-quality")
         async def data_quality():

@@ -9,7 +9,9 @@ from v5.common.config import validate_json_manifest, _load_json
 
 
 HEX_ADDR_RE = re.compile(r"^0x[0-9a-fA-F]{40}$")
-VALID_FEE_TIERS = {25, 100, 250, 500, 3000, 10000}
+# Allowed fee tiers (in bps) across supported DEXes.
+# PancakeSwap v3 commonly uses 25, 100, 500, 2500, 10000; Uniswap v3 uses 100, 500, 3000, 10000 for the pools we track.
+VALID_FEE_TIERS = {25, 100, 250, 500, 2500, 3000, 10000}
 
 
 class ManifestProblems(Exception):

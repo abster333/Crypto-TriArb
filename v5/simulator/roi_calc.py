@@ -76,41 +76,10 @@ def compute_roi(legs: List[OpportunityLeg], pool_states: Dict[str, PoolState], i
     if roi < Decimal(str(min_roi)):
         return None
 
-    # Compute per-leg band caps (±0.5%) and ROI caps; prefer band caps for realism
-    size_cap = None
-    band_caps: List[Decimal] = []
-    try:
-        BAND = Decimal("0.005")
-        roi_abs = float(roi) if roi > 0 else 0.0
-        if roi_abs > 0:
-            for leg in legs:
-                pool_state = pool_states.get(leg.pool)
-                if not pool_state:
-                    continue
-                zero_for_one = leg.token_in == pool_state.pool_meta.token0
-                cap_roi = _max_in_for_delta(pool_state, Decimal(roi_abs), zero_for_one)
-                cap_band = _max_in_for_delta(pool_state, BAND, zero_for_one)
-                if cap_roi:
-                    per_leg_cap.append(cap_roi)
-                if cap_band:
-                    band_caps.append(cap_band)
-        if band_caps:
-            size_cap = min(band_caps)
-        elif per_leg_cap:
-            size_cap = min(per_leg_cap)
-        else:
-            size_cap = None
-    except Exception:
-        size_cap = None
-
-    if size_cap:
-        log.info(
-            "OPP_CAP roi=%.6f start_token=%s cap=%.4f legs=%s",
-            float(roi),
-            legs[0].token_in,
-            float(size_cap),
-            _legs_summary(),
-        )
+    # Size cap based on ROI break-even (across legs). Always use break-even search.
+    size_cap = _cycle_cap_break_even(legs, pool_states, initial_amount)
+    if size_cap is None or size_cap <= 0:
+        size_cap = Decimal(initial_amount)
 
     return Opportunity(
         legs=legs,
@@ -195,57 +164,72 @@ def _simulate_cycle_amount(start_amount: Decimal, legs: List[OpportunityLeg], po
 
 
 def _cycle_cap_break_even(legs: List[OpportunityLeg], pool_states: Dict[str, PoolState], initial_amount: Decimal) -> Decimal | None:
-    """Find starting amount where ROI -> ~0 using binary search. Assumes ROI decreases with size."""
-    start = Decimal(initial_amount)
-    band_caps: List[Decimal] = []
-    BAND = Decimal("0.005")
-    for leg in legs:
-        ps = pool_states.get(leg.pool)
-        if not ps:
-            continue
-        cap_band = _max_in_for_delta(ps, BAND, leg.token_in == ps.pool_meta.token0)
-        if cap_band:
-            band_caps.append(cap_band)
-    max_high = min(band_caps) if band_caps else None
+    """
+    Find the maximum starting amount where ROI >= 0 by binary searching on simulated swaps.
+    No arbitrary band guard; relies solely on simulated slippage/fees.
+    """
 
-    out0 = _simulate_cycle_amount(start, legs, pool_states)
-    if not out0:
-        return None
-    roi0 = (out0 - start) / start
-    if roi0 <= 0:
-        return None
+    MAX_LIMIT = Decimal("1e12")
 
-    low = start
-    high = start
-    # grow high until ROI <= 0 or cap
-    for _ in range(20):
-        if max_high is not None and high > max_high:
-            high = max_high
-        out_h = _simulate_cycle_amount(high, legs, pool_states)
-        if not out_h:
-            return max_high
-        roi_h = (out_h - high) / high
-        if roi_h <= 0:
-            break
-        if max_high is not None and high >= max_high:
-            break
-        high *= 2
-    else:
-        return max_high
-
-    for _ in range(30):
-        mid = (low + high) / 2
-        out_m = _simulate_cycle_amount(mid, legs, pool_states)
-        if not out_m:
+    def roi_for(amount: Decimal) -> Decimal | None:
+        out = _simulate_cycle_amount(amount, legs, pool_states)
+        if not out:
             return None
-        roi_m = (out_m - mid) / mid
-        if roi_m > 0:
+        return (out - amount) / amount
+
+    start = max(initial_amount, Decimal("1"))
+    roi_start = roi_for(start)
+    if roi_start is None:
+        return None
+    # If ROI is exactly zero (or nearly), cap is unbounded up to MAX_LIMIT
+    if abs(roi_start) < Decimal("1e-12"):
+        return start
+    if roi_start < 0:
+        return Decimal("0")
+
+    low = Decimal("0")
+    high = start
+
+    # grow high until ROI <= 0 or we hit MAX_LIMIT
+    for _ in range(60):
+        roi_high = roi_for(high)
+        if roi_high is None:
+            return None
+        if roi_high <= 0:
+            break
+        if high >= MAX_LIMIT:
+            return MAX_LIMIT
+        high *= 2
+        if high > MAX_LIMIT:
+            high = MAX_LIMIT
+            roi_high = roi_for(high)
+            if roi_high is None:
+                return None
+            if roi_high > 0:
+                return MAX_LIMIT
+            break
+
+    roi_high = roi_for(high)
+    if roi_high is None:
+        return None
+
+    # binary search for sign change
+    for _ in range(80):
+        mid = (low + high) / 2
+        roi_mid = roi_for(mid)
+        if roi_mid is None:
+            return None
+        if abs(roi_mid) < Decimal("1e-8"):
+            return mid
+        if roi_mid > 0:
             low = mid
         else:
             high = mid
+        if high == 0:
+            return Decimal("0")
         if (high - low) / high < Decimal("1e-6"):
             break
-    return min(high, max_high) if max_high is not None else high
+    return high
 
 
 def _tick_spacing(fee_tier: int) -> int:

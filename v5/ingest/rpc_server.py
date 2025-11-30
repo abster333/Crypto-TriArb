@@ -22,14 +22,14 @@ class BatchRpcServer:
     def __init__(
         self,
         *,
-        max_calls_per_second: int = 2,
-        max_batch_size: int = 10,
+        max_calls_per_second: int | None = None,
+        max_batch_size: int | None = None,
         max_retries: int = 3,
         timeout_seconds: float = 10.0,
     ) -> None:
         self.settings = Settings()
-        self._max_qps = max_calls_per_second
-        self._max_batch = max_batch_size
+        self._max_qps = max_calls_per_second or self.settings.rpc_max_qps
+        self._max_batch = max_batch_size or self.settings.rpc_max_batch_size
         self._max_retries = max_retries
         self._timeout = aiohttp.ClientTimeout(total=timeout_seconds)
         self._queue: asyncio.Queue = asyncio.Queue()
@@ -37,6 +37,7 @@ class BatchRpcServer:
         self._last_call_ts = 0.0
         self._session: aiohttp.ClientSession | None = None
         self._breaker = CircuitBreaker()
+        self._fallback_idx: dict[str, int] = {}
 
     async def start(self) -> None:
         if self._task:
@@ -92,8 +93,8 @@ class BatchRpcServer:
             jobs_by_net.setdefault(net, []).append(job)
 
         for net, jobs in jobs_by_net.items():
-            url = self._rpc_url_for_network(net)
-            if not url or not self._session:
+            urls = self._rpc_urls_for_network(net)
+            if not urls or not self._session:
                 for job in jobs:
                     fut = job[-1]
                     if not fut.done():
@@ -132,17 +133,17 @@ class BatchRpcServer:
             if not payload:
                 continue
 
-            async def _do_post():
+            async def _do_post(url):
                 start = time.time()
                 async with self._session.post(url, json=payload) as resp:
                     status = resp.status
                     text = await resp.text()
                     if status >= 400:
                         log.warning(
-                            "RPC_HTTP_ERROR network=%s status=%s payload=%dbytes", net, status, len(text or ""),
+                            "RPC_HTTP_ERROR network=%s status=%s payload=%dbytes url=%s", net, status, len(text or ""), url
                         )
                         if status == 429:
-                            log.warning("RPC_RATE_LIMIT network=%s", net)
+                            log.warning("RPC_RATE_LIMIT network=%s url=%s", net, url)
                     try:
                         data_local = json.loads(text)
                     except Exception:
@@ -152,16 +153,23 @@ class BatchRpcServer:
 
             data = None
             attempt = 0
-            while attempt < self._max_retries:
+            url_idx = self._fallback_idx.get(net, 0)
+            ratelimit_triggered = False
+            while attempt < self._max_retries and url_idx < len(urls):
                 attempt += 1
+                url = urls[url_idx]
                 try:
-                    data = await self._breaker.call(_do_post)
+                    data = await self._breaker.call(lambda: _do_post(url))
                     break
-                except Exception:
+                except Exception as exc:
                     metrics.INGEST_ERRORS.labels(type="rpc_retry").inc()
+                    log.warning("RPC_POST_FAIL network=%s url=%s err=%s attempt=%s", net, url, exc, attempt)
                     await asyncio.sleep(min(2**attempt, 5) * 0.1)
+                    url_idx += 1
+            self._fallback_idx[net] = url_idx if url_idx < len(urls) else 0
             if data is None:
                 metrics.INGEST_ERRORS.labels(type="rpc_failed").inc()
+                continue
 
             # Map results
             result_by_label: Dict[str, Any] = {}
@@ -175,9 +183,11 @@ class BatchRpcServer:
                         label, method_name = label_method
                         if "error" in item:
                             err = item.get("error") or {}
-                            log.warning(
-                                "RPC_ERROR network=%s id=%s code=%s msg=%s", net, _id, err.get("code"), err.get("message")
-                            )
+                            code = err.get("code")
+                            msg = err.get("message")
+                            log.warning("RPC_ERROR network=%s id=%s code=%s msg=%s url=%s", net, _id, code, msg, url)
+                            if code in (-32003, -32005) or msg and "limit" in str(msg).lower():
+                                ratelimit_triggered = True
                         result_by_label[label] = item.get("result")
                         metrics.INGEST_RPC_CALLS.labels(network=net, method=method_name).inc()
             
@@ -199,13 +209,29 @@ class BatchRpcServer:
                 if not fut.done():
                     fut.set_result(res)
 
-    def _rpc_url_for_network(self, network: str) -> Optional[str]:
+            # If we saw rate limit errors, advance fallback for next batch
+            if ratelimit_triggered:
+                self._fallback_idx[net] = (url_idx + 1) % len(urls)
+                log.warning("RPC_RATE_LIMIT_SWITCH network=%s new_url=%s", net, urls[self._fallback_idx[net]])
+
+    def _rpc_urls_for_network(self, network: str) -> list[str]:
         net = network.lower()
+        urls: list[str] = []
         if net in ("eth", "ethereum"):
-            return self.settings.ethereum_rpc_url
+            if self.settings.ethereum_rpc_url:
+                urls.append(self.settings.ethereum_rpc_url)
         if net in ("bsc", "bnb", "bnb chain"):
-            return self.settings.bsc_rpc_url
-        return None
+            if self.settings.bsc_rpc_url:
+                urls.append(self.settings.bsc_rpc_url)
+            urls.extend(
+                [
+                    "https://bsc-dataseed.binance.org/",
+                    "https://bsc-dataseed1.ninicoin.io/",
+                    "https://bsc-dataseed1.defibit.io/",
+                    "https://rpc.ankr.com/bsc",
+                ]
+            )
+        return urls
 
 
 __all__ = ["BatchRpcServer"]
