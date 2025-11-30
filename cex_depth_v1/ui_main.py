@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
+from pathlib import Path
 
 import uvicorn
 
@@ -12,7 +13,26 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s [%(nam
 log = logging.getLogger("depth-ui-main")
 
 
+def _load_env() -> None:
+    """Best-effort load of .env.depth or .env into os.environ (if not already set)."""
+    for candidate in (".env.depth", ".env"):
+        path = Path(candidate)
+        if not path.exists():
+            continue
+        for line in path.read_text().splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, val = line.split("=", 1)
+            key = key.strip()
+            val = val.strip()
+            os.environ.setdefault(key, val)
+        log.info("Loaded environment from %s", path)
+        break
+
+
 async def amain() -> None:
+    _load_env()
     nats_url = os.getenv("DEPTH_NATS_URL", "nats://127.0.0.1:4222")
     snapshot_subject = os.getenv("DEPTH_SNAPSHOT_SUBJECT", "md.depth")
     symbols_env = os.getenv("DEPTH_SYMBOLS")

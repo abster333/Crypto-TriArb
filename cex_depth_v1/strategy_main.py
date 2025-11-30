@@ -26,7 +26,26 @@ def env_list(key: str, default: str = "") -> List[str]:
     return [t.strip() for t in raw.split(",") if t.strip()]
 
 
+def _load_env() -> None:
+    """Best-effort load of .env.depth or .env into os.environ (if not already set)."""
+    for candidate in (".env.depth", ".env"):
+        path = Path(candidate)
+        if not path.exists():
+            continue
+        for line in path.read_text().splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, val = line.split("=", 1)
+            key = key.strip()
+            val = val.strip()
+            os.environ.setdefault(key, val)
+        log.info("Loaded environment from %s", path)
+        break
+
+
 async def amain() -> None:
+    _load_env()
     cycles_env = os.getenv("DEPTH_STRAT_CYCLES", "")
     exchanges_raw = os.getenv("DEPTH_STRAT_EXCHANGES") or os.getenv("DEPTH_EXCHANGES")
     if exchanges_raw:

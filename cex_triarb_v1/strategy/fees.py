@@ -7,6 +7,7 @@ from typing import Dict
 DEFAULT_TAKER_BPS = {
     "COINBASE": 6.0,   # 0.06%
     "KRAKEN": 16.0,    # 0.16%
+    "OKX": 10.0,       # 0.10%
 }
 
 
@@ -24,4 +25,3 @@ def fee_map(exchanges) -> Dict[str, float]:
                 pass
         out[ex_u] = DEFAULT_TAKER_BPS.get(ex_u, 10.0)
     return out
-
