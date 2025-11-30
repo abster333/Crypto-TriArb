@@ -11,6 +11,7 @@ log = logging.getLogger(__name__)
 
 COINBASE_PRODUCTS = "https://api.exchange.coinbase.com/products"
 KRAKEN_PAIRS = "https://api.kraken.com/0/public/AssetPairs"
+OKX_INSTRUMENTS = "https://www.okx.com/api/v5/public/instruments?instType=SPOT"
 
 QUOTE_WHITELIST = {"USD", "USDT", "USDC", "BTC", "ETH"}
 STABLES = {"USD", "USDT", "USDC"}
@@ -81,6 +82,37 @@ async def fetch_kraken_symbols() -> List[str]:
     return out
 
 
+async def fetch_okx_symbols() -> List[str]:
+    """Fetch tradable spot instruments from OKX and normalize to BASEQUOTE."""
+    quotes = _quote_whitelist_for("OKX")
+    out: List[str] = []
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(OKX_INSTRUMENTS, timeout=10) as resp:
+                if resp.status != 200:
+                    log.warning("OKX instruments status=%s", resp.status)
+                    return out
+                payload = await resp.json()
+        data = payload.get("data") or []
+        for inst in data:
+            if (inst.get("state") or "").lower() != "live":
+                continue
+            inst_id = inst.get("instId") or ""
+            if "-" not in inst_id:
+                continue
+            base, quote = inst_id.split("-", 1)
+            base = _norm_base(base)
+            quote = _norm_quote(quote)
+            if quote not in quotes:
+                continue
+            if base in STABLES and quote in STABLES:
+                continue
+            out.append(f"{base}{quote}")
+    except Exception as exc:  # noqa: BLE001
+        log.warning("OKX symbol fetch failed: %s", exc)
+    return out
+
+
 def _norm_base(raw: str) -> str:
     raw = raw.upper()
     # Kraken prefixes: X for crypto, Z for fiat. Strip one leading marker.
@@ -107,6 +139,8 @@ async def discover_symbols(exchanges: Iterable[str]) -> List[str]:
         tasks.append(fetch_coinbase_symbols())
     if "KRAKEN" in ex_set:
         tasks.append(fetch_kraken_symbols())
+    if "OKX" in ex_set:
+        tasks.append(fetch_okx_symbols())
     results = await asyncio.gather(*tasks, return_exceptions=True)
     merged: Set[str] = set()
     for res in results:
@@ -124,6 +158,8 @@ async def discover_per_exchange(exchanges: Iterable[str]) -> Tuple[List[str], Di
         per["COINBASE"] = await fetch_coinbase_symbols()
     if "KRAKEN" in ex_set:
         per["KRAKEN"] = await fetch_kraken_symbols()
+    if "OKX" in ex_set:
+        per["OKX"] = await fetch_okx_symbols()
     union: Set[str] = set()
     for lst in per.values():
         union.update(lst)

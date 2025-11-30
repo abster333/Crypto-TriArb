@@ -34,6 +34,7 @@ async def amain() -> None:
     cb_channels = [c.strip() for c in cb_channels_env.split(",") if c.strip()]
     kraken_book_depth = int(os.getenv("DEPTH_KRAKEN_BOOK_DEPTH", str(max(10, depth_levels))))
     kraken_batch_size = int(os.getenv("DEPTH_KRAKEN_BATCH_SIZE", "100"))
+    okx_book_depth = int(os.getenv("DEPTH_OKX_BOOK_DEPTH", str(depth_levels)))
     cb_ws_mode = os.getenv("COINBASE_WS_MODE", os.getenv("DEPTH_CB_WS_MODE", "ADVANCED"))
     cb_ws_batch = int(os.getenv("COINBASE_WS_BATCH", os.getenv("DEPTH_CB_WS_BATCH", "40")))
     cb_api_key = os.getenv("COINBASE_API_KEY")
@@ -71,6 +72,7 @@ async def amain() -> None:
         coinbase_api_key=cb_api_key,
         coinbase_api_secret=cb_api_secret,
         coinbase_api_passphrase=cb_api_passphrase,
+        okx_book_depth=okx_book_depth,
     )
     await service.start()
 

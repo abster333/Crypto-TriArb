@@ -42,6 +42,7 @@ class WsIngestManager:
         coinbase_mode: str = "EXCHANGE",
         coinbase_batch_size: int = 40,
         kraken_batch_size: int = 100,
+        okx_book_depth: int = 5,
     ) -> None:
         self._symbols: List[str] = [s.upper() for s in symbols]
         self._on_ticker = on_ticker or self._noop_ticker
@@ -61,6 +62,7 @@ class WsIngestManager:
         self._coinbase_auth = coinbase_auth
         self._coinbase_mode = (coinbase_mode or "EXCHANGE").upper()
         self._coinbase_batch_size = max(1, coinbase_batch_size)
+        self._okx_book_depth = max(1, okx_book_depth)
         self._tasks: Dict[str, asyncio.Task] = {}
         self._adapters = {}
         self._lock = asyncio.Lock()
@@ -141,6 +143,17 @@ class WsIngestManager:
                 key = "KRAKEN" if len(batches) == 1 else f"KRAKEN-{idx}"
                 self._adapters[key] = adapter
                 self._tasks[key] = asyncio.create_task(adapter.run_forever(), name=f"kr-ws-{idx}")
+        if "OKX" in self._exchanges:
+            from .ws_okx import OkxWsAdapter
+
+            okx_symbols = self._symbols_for("OKX")
+            adapter = OkxWsAdapter(
+                okx_symbols,
+                on_depth=self._on_depth if self._depth_enabled else None,
+                depth_levels=self._okx_book_depth,
+            )
+            self._adapters["OKX"] = adapter
+            self._tasks["OKX"] = asyncio.create_task(adapter.run_forever(), name="okx-ws")
 
     async def _noop_ticker(self, exchange: str, ticker: object) -> None:
         log.debug("TICK %s %s", exchange, ticker)
@@ -179,6 +192,7 @@ class IngestService:
         coinbase_api_passphrase: str | None = None,
         coinbase_batch_size: int = 40,
         kraken_batch_size: int = 100,
+        okx_book_depth: int = 5,
     ) -> None:
         self.symbols = [s.upper() for s in symbols]
         self.exchanges = {ex.upper() for ex in exchanges}
@@ -194,9 +208,11 @@ class IngestService:
         if self.depth_enabled:
             self.coinbase_channels = list(coinbase_channels) if coinbase_channels else None
             self.kraken_book_depth = max(self.depth_levels, kraken_book_depth)
+            self.okx_book_depth = max(self.depth_levels, okx_book_depth)
         else:
             self.coinbase_channels = ["ticker"]
             self.kraken_book_depth = self.depth_levels  # unused when depth is off
+            self.okx_book_depth = self.depth_levels
         self.kraken_batch_size = max(1, kraken_batch_size)
         self.coinbase_ws_mode = (coinbase_ws_mode or "EXCHANGE").upper()
         self.coinbase_batch_size = max(1, coinbase_batch_size)
@@ -219,6 +235,7 @@ class IngestService:
             coinbase_auth=(self.coinbase_api_key, self.coinbase_api_secret, self.coinbase_api_passphrase),
             coinbase_batch_size=self.coinbase_batch_size,
             kraken_batch_size=self.kraken_batch_size,
+            okx_book_depth=self.okx_book_depth,
         )
         self._health = {"ws_last_tick": {}, "ws_last_depth": {}, "rest_last": 0}
         self._tasks: List[asyncio.Task] = []

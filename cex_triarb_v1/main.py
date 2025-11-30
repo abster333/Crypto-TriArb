@@ -36,6 +36,7 @@ async def amain() -> None:
     cb_channels = [c.strip() for c in cb_channels_env.split(",") if c.strip()] if cb_channels_env else (["ticker", "level2"] if depth_enabled else ["ticker"])
     kraken_book_depth = int(os.getenv("KRAKEN_BOOK_DEPTH", str(max(10, depth_levels))))
     kraken_batch_size = int(os.getenv("KRAKEN_BATCH_SIZE", "100"))
+    okx_book_depth = int(os.getenv("OKX_BOOK_DEPTH", str(depth_levels)))
     cb_ws_mode = os.getenv("COINBASE_WS_MODE", "EXCHANGE")
     cb_ws_batch = int(os.getenv("COINBASE_WS_BATCH", "40"))
     cb_api_key = os.getenv("COINBASE_API_KEY")
@@ -70,6 +71,7 @@ async def amain() -> None:
         coinbase_channels=cb_channels,
         kraken_book_depth=kraken_book_depth,
         kraken_batch_size=kraken_batch_size,
+        okx_book_depth=okx_book_depth,
         coinbase_ws_mode=cb_ws_mode,
         coinbase_batch_size=cb_ws_batch,
         coinbase_api_key=cb_api_key,
