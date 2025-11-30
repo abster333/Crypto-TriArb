@@ -71,9 +71,16 @@ class OkxWsAdapter(BaseWsAdapter):
                 attempt += 1
                 async with self.session_factory(self.url) as ws:
                     await ws.send(self._subscribe_payload())
+                    # OKX expects app-level pings; keep a heartbeat going.
+                    ping_task = asyncio.create_task(self._ping_loop(ws), name="okx-ping")
                     self._backoff = 1.0
-                    async for msg in ws:
-                        await self.handle_message(msg)
+                    try:
+                        async for msg in ws:
+                            await self.handle_message(msg)
+                    finally:
+                        ping_task.cancel()
+                        with contextlib.suppress(Exception):
+                            await ping_task
             except asyncio.CancelledError:
                 raise
             except Exception as exc:  # noqa: BLE001
@@ -86,6 +93,8 @@ class OkxWsAdapter(BaseWsAdapter):
             msg = json.loads(raw)
         except Exception:
             metrics.WS_MESSAGE_ERRORS.labels(exchange="OKX").inc()
+            return
+        if msg == "pong" or msg.get("event") == "pong":
             return
         if msg.get("event") == "subscribe":
             return
@@ -112,3 +121,11 @@ class OkxWsAdapter(BaseWsAdapter):
         metrics.WS_DEPTH_UPDATES.labels(exchange="OKX", kind="l2").inc()
         metrics.WS_LAST_DEPTH_TS.labels(exchange="OKX", symbol=symbol).set(ts / 1000.0)
         await self._on_depth(snap)
+
+    async def _ping_loop(self, ws) -> None:
+        while True:
+            try:
+                await ws.send(json.dumps({"op": "ping"}))
+            except Exception:
+                return
+            await asyncio.sleep(20)
