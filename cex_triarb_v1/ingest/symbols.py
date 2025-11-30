@@ -25,6 +25,10 @@ def _quote_whitelist_for(exchange: str) -> Set[str]:
     return set(QUOTE_WHITELIST)
 
 
+def _allow_stable_stable() -> bool:
+    return os.getenv("ALLOW_STABLE_STABLE", "false").lower() in ("1", "true", "yes")
+
+
 async def fetch_coinbase_symbols() -> List[str]:
     quotes = _quote_whitelist_for("COINBASE")
     out: List[str] = []
@@ -43,8 +47,8 @@ async def fetch_coinbase_symbols() -> List[str]:
             quote = (prod.get("quote_currency") or "").upper()
             if not base or quote not in quotes:
                 continue
-            # Skip stable-stable pairs that create bogus triangles (e.g., USDTUSD).
-            if base in STABLES and quote in STABLES:
+            # Skip stable-stable pairs unless explicitly allowed.
+            if base in STABLES and quote in STABLES and not _allow_stable_stable():
                 continue
             out.append(f"{base}{quote}")
     except Exception as exc:  # noqa: BLE001
@@ -74,7 +78,7 @@ async def fetch_kraken_symbols() -> List[str]:
             quote = quote.upper()
             if quote not in quotes:
                 continue
-            if base in STABLES and quote in STABLES:
+            if base in STABLES and quote in STABLES and not _allow_stable_stable():
                 continue
             out.append(f"{base}{quote}")
     except Exception as exc:  # noqa: BLE001
@@ -105,7 +109,7 @@ async def fetch_okx_symbols() -> List[str]:
             quote = _norm_quote(quote)
             if quote not in quotes:
                 continue
-            if base in STABLES and quote in STABLES:
+            if base in STABLES and quote in STABLES and not _allow_stable_stable():
                 continue
             out.append(f"{base}{quote}")
     except Exception as exc:  # noqa: BLE001
