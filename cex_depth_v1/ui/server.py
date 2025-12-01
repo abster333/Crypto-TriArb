@@ -35,12 +35,18 @@ def parse_symbol(sym: str) -> tuple[str | None, str | None]:
 class DepthCache:
     def __init__(self) -> None:
         self.data: Dict[tuple[str, str], dict] = {}
+        self.latency_stats: Dict[str, dict] = {}
 
     def update(self, event: dict) -> None:
         exchange = event.get("exchange")
         symbol = event.get("symbol")
         if not exchange or not symbol:
             return
+        ts_event = event.get("ts_event")
+        ts_ingest = event.get("ts_ingest")
+        latency_ms = None
+        if ts_event and ts_ingest and ts_ingest >= ts_event:
+            latency_ms = ts_ingest - ts_event
         self.data[(exchange, symbol)] = {
             "exchange": exchange,
             "symbol": symbol,
@@ -50,7 +56,12 @@ class DepthCache:
             "ts_event": event.get("ts_event"),
             "ts_ingest": event.get("ts_ingest"),
             "source": event.get("source"),
+            "latency_ms": latency_ms,
         }
+        if latency_ms is not None:
+            stats = self.latency_stats.setdefault(exchange, {"sum": 0.0, "count": 0})
+            stats["sum"] += latency_ms
+            stats["count"] += 1
 
     def snapshot(self) -> List[dict]:
         out: List[dict] = []
@@ -63,6 +74,14 @@ class DepthCache:
                 }
             )
         return sorted(out, key=lambda r: (r["symbol"], r["exchange"]))
+
+    def latency_summary(self) -> List[dict]:
+        out: List[dict] = []
+        for ex, stats in self.latency_stats.items():
+            if stats["count"] == 0:
+                continue
+            out.append({"exchange": ex, "avg_latency_ms": stats["sum"] / stats["count"], "samples": stats["count"]})
+        return out
 
 
 class DepthDashboardService:
@@ -107,6 +126,10 @@ class DepthDashboardService:
         @self.app.get("/api/opps")
         async def api_opps():
             return JSONResponse(self.opps)
+
+        @self.app.get("/api/latency")
+        async def api_latency():
+            return JSONResponse(self.cache.latency_summary())
 
         @self.app.get("/", response_class=HTMLResponse)
         async def index():

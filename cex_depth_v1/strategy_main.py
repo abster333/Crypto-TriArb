@@ -122,6 +122,7 @@ async def amain() -> None:
     debug_depth_verbose = os.getenv("STRAT_DEBUG_DEPTH_VERBOSE", "false").lower() in ("1", "true", "yes")
     start_notional_raw = os.getenv("DEPTH_START_NOTIONAL", os.getenv("STRAT_START_NOTIONAL"))
     start_notional = float(start_notional_raw) if start_notional_raw not in (None, "") else float("inf")
+    stale_ms = int(os.getenv("DEPTH_STALE_MS", os.getenv("STRAT_STALE_MS", "500")))
 
     # Publish cycles to Redis/NATS for UI/consumers.
     await publish_cycles_once(cycles, cycles_subject, nats_url, redis_url, redis_prefix)
@@ -145,6 +146,7 @@ async def amain() -> None:
         debug_depth=debug_depth,
         debug_depth_verbose=debug_depth_verbose,
         start_notional=start_notional,
+        stale_ms=stale_ms,
     )
     await consumer.start()
     stop_event = asyncio.Event()

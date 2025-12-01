@@ -181,6 +181,7 @@ class StrategyConsumer:
         debug_depth_verbose: bool = False,
         start_notional: float = float("inf"),
         enable_depth_optimization: bool = False,
+        stale_ms: int = 500,
     ) -> None:
         self.cycles = cycles
         self.nats_url = nats_url
@@ -201,6 +202,7 @@ class StrategyConsumer:
         self.debug_depth_verbose = debug_depth_verbose
         self.start_notional = start_notional
         self.enable_depth_optimization = enable_depth_optimization
+        self._stale_ms = max(0, int(stale_ms))
 
     async def start(self) -> None:
         if self.redis_url:
@@ -261,6 +263,21 @@ class StrategyConsumer:
                 if self.debug_depth:
                     log.debug("DBG cycle %s waiting for books: %s", cycle.id, [(m.exchange, m.symbol) for m in missing])
                 continue
+            # freshness guard: any stale leg skips the cycle
+            stale = False
+            for leg in cycle.legs:
+                book = self._l1.get((leg.exchange, leg.symbol))
+                if not book:
+                    stale = True
+                    break
+                ts_evt = book.ts_event or 0
+                ts_ing = book.ts_ingest or ts_evt
+                age = now - max(ts_evt, ts_ing)
+                if age > self._stale_ms:
+                    stale = True
+                    break
+            if stale:
+                continue
             result = self._calc_cycle(cycle)
             if result is None:
                 continue
@@ -270,6 +287,7 @@ class StrategyConsumer:
                 self._active[cycle.id] = (first, now)
                 payload = {
                     "cycle_id": cycle.id,
+                    "duration_ms": now - first,
                     "roi_bps": roi_bps,
                     "gross_roi_bps": gross_roi_bps,
                     "quote_start": start_quote,
@@ -281,7 +299,6 @@ class StrategyConsumer:
                     "legs": [leg.__dict__ for leg in cycle.legs],
                     "leg_fills_net": leg_debug_net,
                     "leg_fills_gross": leg_debug_gross,
-                    "duration_ms": now - first,
                     "ts_detected": now,
                 }
                 log.info("OPP %s roi=%.2f bps", cycle.id, roi_bps)

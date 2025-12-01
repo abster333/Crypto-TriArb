@@ -4,6 +4,7 @@ import asyncio
 import json
 import logging
 import time
+import contextlib
 from typing import Awaitable, Callable, Optional, Sequence
 
 import websockets
@@ -56,6 +57,7 @@ class OkxWsAdapter(BaseWsAdapter):
         self._depth_books: dict[str, DepthBook] = {}
         self._depth_levels = max(1, depth_levels)
         self._backoff = 1.0
+        self._requested: set[str] = set(_to_inst_id(s) for s in symbols)
 
     def _subscribe_payload(self) -> str:
         args = []
@@ -71,6 +73,8 @@ class OkxWsAdapter(BaseWsAdapter):
                 attempt += 1
                 async with self.session_factory(self.url) as ws:
                     await ws.send(self._subscribe_payload())
+                    log.info("OKX subscribe sent instIds=%d", len(self._requested))
+                    missing_task = asyncio.create_task(self._log_missing_after_delay(), name="okx-missing-check")
                     # OKX expects app-level pings; keep a heartbeat going.
                     ping_task = asyncio.create_task(self._ping_loop(ws), name="okx-ping")
                     self._backoff = 1.0
@@ -79,12 +83,14 @@ class OkxWsAdapter(BaseWsAdapter):
                             await self.handle_message(msg)
                     finally:
                         ping_task.cancel()
+                        missing_task.cancel()
                         with contextlib.suppress(Exception):
                             await ping_task
+                            await missing_task
             except asyncio.CancelledError:
                 raise
             except Exception as exc:  # noqa: BLE001
-                log.warning("OKX ws error: %s (attempt=%d)", exc, attempt)
+                log.exception("OKX ws error (attempt=%d)", attempt)
                 await asyncio.sleep(min(self._backoff, 30))
                 self._backoff = min(self._backoff * 1.5, 30)
 
@@ -94,11 +100,23 @@ class OkxWsAdapter(BaseWsAdapter):
         except Exception:
             metrics.WS_MESSAGE_ERRORS.labels(exchange="OKX").inc()
             return
+        if msg.get("event") == "error":
+            arg = msg.get("arg") or {}
+            code = msg.get("code")
+            message = msg.get("msg") or msg.get("message")
+            inst_id = arg.get("instId")
+            channel = arg.get("channel")
+            log.error("OKX SUBSCRIBE ERROR code=%s instId=%s channel=%s msg=%s", code, inst_id, channel, message)
+            if inst_id in self._requested:
+                self._requested.discard(inst_id)
+            return
         if msg.get("event") == "subscribe":
             arg = (msg.get("arg") or {})
             inst_id = arg.get("instId")
             channel = arg.get("channel")
             log.info("OKX SUBSCRIBED channel=%s instId=%s", channel, inst_id)
+            if inst_id in self._requested:
+                self._requested.discard(inst_id)
             return
         if msg == "pong" or msg.get("event") == "pong":
             return
@@ -135,3 +153,10 @@ class OkxWsAdapter(BaseWsAdapter):
             except Exception:
                 return
             await asyncio.sleep(20)
+
+    async def _log_missing_after_delay(self) -> None:
+        # Give OKX a few seconds to ack; then log any instIds still not confirmed.
+        await asyncio.sleep(10)
+        if self._requested:
+            sample = list(sorted(self._requested))[:10]
+            log.warning("OKX missing subscribe acks count=%d sample=%s", len(self._requested), sample)

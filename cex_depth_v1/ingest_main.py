@@ -6,7 +6,7 @@ import os
 from typing import List
 from pathlib import Path
 
-from cex_triarb_v1.ingest.symbols import discover_per_exchange
+from cex_triarb_v1.ingest.symbols import discover_per_exchange, fetch_okx_symbols
 from cex_triarb_v1.strategy.auto_build import generate_cycles_for_exchange
 from cex_depth_v1.ingest_service import DepthIngestService
 
@@ -55,6 +55,7 @@ async def amain() -> None:
     kraken_book_depth = int(os.getenv("DEPTH_KRAKEN_BOOK_DEPTH", str(max(10, depth_levels))))
     kraken_batch_size = int(os.getenv("DEPTH_KRAKEN_BATCH_SIZE", "100"))
     okx_book_depth = int(os.getenv("DEPTH_OKX_BOOK_DEPTH", str(depth_levels)))
+    okx_batch_size = int(os.getenv("DEPTH_OKX_BATCH_SIZE", "250"))
     cb_ws_mode = os.getenv("COINBASE_WS_MODE", os.getenv("DEPTH_CB_WS_MODE", "ADVANCED"))
     cb_ws_batch = int(os.getenv("COINBASE_WS_BATCH", os.getenv("DEPTH_CB_WS_BATCH", "40")))
     cb_api_key = os.getenv("COINBASE_API_KEY")
@@ -68,6 +69,21 @@ async def amain() -> None:
     else:
         for ex in exchanges:
             per_exchange_symbols.setdefault(ex.upper(), [s.upper() for s in symbols])
+
+    # OKX validation: drop symbols not live on OKX before subscribing.
+    if "OKX" in per_exchange_symbols:
+        try:
+            okx_live = set(await fetch_okx_symbols())
+            before = len(per_exchange_symbols["OKX"])
+            per_exchange_symbols["OKX"] = [s for s in per_exchange_symbols["OKX"] if s in okx_live]
+            after = len(per_exchange_symbols["OKX"])
+            log.info("Filtered OKX symbols by live instruments: %d -> %d", before, after)
+        except Exception as exc:
+            log.warning("OKX live instrument fetch failed; proceeding without filter (%s)", exc)
+
+    # Recompute union symbols from per_exchange map to ensure it matches filtered lists.
+    if per_exchange_symbols:
+        symbols = sorted({sym for lst in per_exchange_symbols.values() for sym in lst})
 
     service = DepthIngestService(
         symbols=symbols,
@@ -93,6 +109,7 @@ async def amain() -> None:
         coinbase_api_secret=cb_api_secret,
         coinbase_api_passphrase=cb_api_passphrase,
         okx_book_depth=okx_book_depth,
+        okx_batch_size=okx_batch_size,
     )
     await service.start()
 

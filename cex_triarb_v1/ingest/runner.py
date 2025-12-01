@@ -43,6 +43,7 @@ class WsIngestManager:
         coinbase_batch_size: int = 40,
         kraken_batch_size: int = 100,
         okx_book_depth: int = 5,
+        okx_batch_size: int = 250,
     ) -> None:
         self._symbols: List[str] = [s.upper() for s in symbols]
         self._on_ticker = on_ticker or self._noop_ticker
@@ -63,6 +64,7 @@ class WsIngestManager:
         self._coinbase_mode = (coinbase_mode or "EXCHANGE").upper()
         self._coinbase_batch_size = max(1, coinbase_batch_size)
         self._okx_book_depth = max(1, okx_book_depth)
+        self._okx_batch_size = max(1, okx_batch_size)
         self._tasks: Dict[str, asyncio.Task] = {}
         self._adapters = {}
         self._lock = asyncio.Lock()
@@ -145,15 +147,17 @@ class WsIngestManager:
                 self._tasks[key] = asyncio.create_task(adapter.run_forever(), name=f"kr-ws-{idx}")
         if "OKX" in self._exchanges:
             from .ws_okx import OkxWsAdapter
-
             okx_symbols = self._symbols_for("OKX")
-            adapter = OkxWsAdapter(
-                okx_symbols,
-                on_depth=self._on_depth if self._depth_enabled else None,
-                depth_levels=self._okx_book_depth,
-            )
-            self._adapters["OKX"] = adapter
-            self._tasks["OKX"] = asyncio.create_task(adapter.run_forever(), name="okx-ws")
+            batches = self._chunks(okx_symbols, self._okx_batch_size)
+            for idx, batch in enumerate(batches):
+                adapter = OkxWsAdapter(
+                    batch,
+                    on_depth=self._on_depth if self._depth_enabled else None,
+                    depth_levels=self._okx_book_depth,
+                )
+                key = "OKX" if len(batches) == 1 else f"OKX-{idx}"
+                self._adapters[key] = adapter
+                self._tasks[key] = asyncio.create_task(adapter.run_forever(), name=f"okx-ws-{idx}")
 
     async def _noop_ticker(self, exchange: str, ticker: object) -> None:
         log.debug("TICK %s %s", exchange, ticker)
@@ -193,6 +197,7 @@ class IngestService:
         coinbase_batch_size: int = 40,
         kraken_batch_size: int = 100,
         okx_book_depth: int = 5,
+        okx_batch_size: int = 300,
     ) -> None:
         self.symbols = [s.upper() for s in symbols]
         self.exchanges = {ex.upper() for ex in exchanges}
