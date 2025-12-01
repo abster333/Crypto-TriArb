@@ -23,8 +23,13 @@ All legacy Java/Spring, old DEX versions, Helm charts, and miscellaneous scripts
 - Deps: `pip install -r cex_depth_v1/requirements.txt` (shares v1 deps)
 - Bring up brokers: `docker compose -f cex_triarb_v1/ops/docker-compose.yml up -d nats redis`
 - Env: `set -a; source .env.depth; set +a` (tweak `DEPTH_*` / `STRAT_*` as needed).
-- Ingest: `python -m cex_depth_v1.ingest_main` (Coinbase depth, defaults to `level2` only).
+- Ingest: `python -m cex_depth_v1.ingest_main` (supports OKX depth `books5`; Coinbase/Kraken optional).
+  - `DEPTH_OKX_BATCH_SIZE` controls how many instIds per WS connection (default 250).
+  - Ingest prefilters OKX symbols to `state=live` instruments and prunes any instIds that return OKX 60018 errors, removing them from Redis desired symbols so the strategy won’t wait on them.
+  - On startup we clear `md_depth:*` desired_symbols and l1/l5 caches to avoid stale books.
 - Strategy: `python -m cex_depth_v1.strategy_main` (auto-builds cycles from Redis desired symbols; emits per-leg fill details and ROI/gross ROI).
+  - Per-cycle payload now includes per-leg latency (ts_ingest - ts_event) with max/avg in logs.
+  - Freshness gate: `DEPTH_STALE_MS` (default 500 ms) skips cycles with stale books; set to a large value (not 0) to effectively disable the gate.
 - UI: `python -m cex_depth_v1.ui_main` → http://localhost:${DEPTH_UI_PORT:-8090} (shows depth, opps, cycles with per-leg fills/fees and age).
 - NATS/Redis connections have retry/backoff; just ensure the brokers are up before starting the stack.
 - Fees: default taker bps via env (`FEE_COINBASE_BPS`, `FEE_KRAKEN_BPS`); otherwise uses conservative defaults (Coinbase 6 bps). Retrieve your real Coinbase fee via `/fees` API and export the env var to match.
