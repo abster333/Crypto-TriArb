@@ -9,6 +9,71 @@ This branch keeps only the active stacks:
 
 All legacy Java/Spring, old DEX versions, Helm charts, and miscellaneous scripts have been removed.
 
+## Architecture (CEX + DEX)
+
+```mermaid
+flowchart LR
+    subgraph Brokers
+        R[Redis (hot cache)]
+        N[NATS]
+    end
+
+    subgraph CEX Depth
+        CI[Ingest: OKX/Coinbase/Kraken WS\nbatching + prune 60018]
+        CS[Strategy: depth arb\nper-leg latency, stale gate]
+    end
+
+    subgraph DEX v5
+        DI[DEX ingest: on-chain RPC/WS\npool manifests]
+        DS[DEX strategies\npath search & sim]
+    end
+
+    CI -->|L1/L5 snapshots| R
+    CI -->|snapshots| N
+    CS -->|opportunities| N
+    DI -->|pool state| R
+    DS -->|signals/opps| N
+
+    UI[UI / dashboards] --> R
+    UI --> N
+```
+
+## Performance & observability
+- **Latency captured per leg**: every opportunity includes `latency_ms` (per-leg list, max, avg) derived from `ts_ingest - ts_event`.
+- **Staleness gate**: `DEPTH_STALE_MS` (default 500 ms) skips cycles with old books; set high to disable. Latency remains logged either way.
+- **Pruning bad markets**: OKX 60018 errors prune those instIds from Redis desired symbols immediately; prevents “waiting for books” noise.
+- **Health**: ingest serves an HTTP health server (`DEPTH_HEALTH_PORT`, default 8087); Redis/NATS backoff built in.
+- **How to summarize latency/ROI**: `jq -r '.latency_ms.max' logs/depth_opps.ndjson | datamash mean 1 median 1 p90 1` (or pipe through Python) to report your run’s numbers.
+
+## Setup (quick)
+
+1) Deps  
+- `pip install -r cex_triarb_v1/requirements.txt` (covers depth and DEX v5).
+
+2) Brokers  
+- `docker compose -f cex_triarb_v1/ops/docker-compose.yml up -d nats redis`
+
+3) Env  
+- `cp .env.example .env` (v5) and set RPC URLs.  
+- `cp .env.depth .env.depth` (already present) and tweak `DEPTH_*` / `STRAT_*` as needed.  
+- Load for a shell: `set -a; source .env.depth; set +a`
+
+4) Run CEX depth stack  
+- Ingest: `python -m cex_depth_v1.ingest_main`  
+- Strategy: `python -m cex_depth_v1.strategy_main`  
+- UI: `python -m cex_depth_v1.ui_main` (http://localhost:${DEPTH_UI_PORT:-8090})
+
+5) Run DEX v5 stack  
+- `python -m v5.main` (expects `ETHEREUM_RPC_URL` / `WS_URL` etc. from `.env`)
+
+## Tech stack
+- Python 3.9+; asyncio, uvloop (optional)
+- WebSockets: native `websockets` lib with batching/heartbeat
+- Message bus / cache: NATS, Redis hot cache (L1/L5 books, desired symbols)
+- Logging/metrics: structured NDJSON logs for opps, per-leg latency; health server via aiohttp
+- DEX: on-chain RPC/WS ingest, pool manifest management, multi-hop path simulation
+- UI: lightweight Python/JS dashboards (depth, opps, cycles)
+
 ## Quick pointers
 
 ### cex_triarb_v1
