@@ -13,6 +13,7 @@ from .depth import DepthSnapshot
 from .publishers import NatsPublisher, RedisHotCache, SnapshotEvent, TradeEvent
 from .rest_fallback import rest_refresh
 from .health_server import start_health_server
+from .publishers import RedisHotCache
 
 log = logging.getLogger(__name__)
 
@@ -44,6 +45,8 @@ class WsIngestManager:
         kraken_batch_size: int = 100,
         okx_book_depth: int = 5,
         okx_batch_size: int = 250,
+        redis_url: str = "redis://127.0.0.1:6379/0",
+        redis_prefix: str = "md",
     ) -> None:
         self._symbols: List[str] = [s.upper() for s in symbols]
         self._on_ticker = on_ticker or self._noop_ticker
@@ -68,6 +71,7 @@ class WsIngestManager:
         self._tasks: Dict[str, asyncio.Task] = {}
         self._adapters = {}
         self._lock = asyncio.Lock()
+        self._redis_cache = RedisHotCache(url=redis_url, prefix=redis_prefix)
 
     async def start(self) -> None:
         async with self._lock:
@@ -80,9 +84,22 @@ class WsIngestManager:
             for task in self._tasks.values():
                 with contextlib.suppress(asyncio.CancelledError):
                     await task
-            self._tasks.clear()
-            self._adapters.clear()
+        self._tasks.clear()
+        self._adapters.clear()
 
+    async def _prune_failed_symbol(self, inst_id: str) -> None:
+        """Remove a failed instId from desired symbols in Redis so downstream cycles don't wait on it."""
+        if not inst_id or not self._redis_cache or not self._redis_cache._client:
+            return
+        sym = inst_id.replace("-", "").upper()
+        try:
+            # remove from union list
+            prefix = self._redis_cache.prefix
+            await self._redis_cache._client.lrem(f"{prefix}:desired_symbols", 0, sym)
+            await self._redis_cache._client.lrem(f"{prefix}:desired_symbols:OKX", 0, sym)
+            log.warning("Pruned failed OKX symbol %s (instId=%s) from desired symbols", sym, inst_id)
+        except Exception as exc:  # noqa: BLE001
+            log.warning("Failed to prune symbol %s from Redis: %s", sym, exc)
     async def update_symbols(self, symbols: Sequence[str]) -> None:
         symbols_norm = [s.upper() for s in symbols]
         if set(symbols_norm) == set(self._symbols):
@@ -99,6 +116,8 @@ class WsIngestManager:
         return [list(items[i : i + size]) for i in range(0, len(items), size)]
 
     async def _start_locked(self) -> None:
+        # start redis cache for pruning before adapters come up
+        await self._redis_cache.start()
         if "COINBASE" in self._exchanges:
             coinbase_symbols = self._symbols_for("COINBASE")
             batches = [coinbase_symbols]
@@ -154,6 +173,7 @@ class WsIngestManager:
                     batch,
                     on_depth=self._on_depth if self._depth_enabled else None,
                     depth_levels=self._okx_book_depth,
+                    prune_failed=self._prune_failed_symbol,
                 )
                 key = "OKX" if len(batches) == 1 else f"OKX-{idx}"
                 self._adapters[key] = adapter
@@ -224,6 +244,9 @@ class IngestService:
         self.coinbase_api_key = coinbase_api_key
         self.coinbase_api_secret = coinbase_api_secret
         self.coinbase_api_passphrase = coinbase_api_passphrase
+        self.redis_url = redis_url
+        self.redis_prefix = redis_prefix.rstrip(":")
+        self._redis_cache = RedisHotCache(url=self.redis_url, prefix=self.redis_prefix)
 
         self.nats = NatsPublisher(url=nats_url, snapshot_subject=snapshot_subject, trade_subject="md.trade", health_subject=health_subject)
         self.redis = RedisHotCache(url=redis_url, prefix=self.redis_prefix)
@@ -241,6 +264,9 @@ class IngestService:
             coinbase_batch_size=self.coinbase_batch_size,
             kraken_batch_size=self.kraken_batch_size,
             okx_book_depth=self.okx_book_depth,
+            okx_batch_size=self.okx_batch_size,
+            redis_url=self.redis_url,
+            redis_prefix=self.redis_prefix,
         )
         self._health = {"ws_last_tick": {}, "ws_last_depth": {}, "rest_last": 0}
         self._tasks: List[asyncio.Task] = []
@@ -255,7 +281,22 @@ class IngestService:
         self._started = True
         await self.nats.start()
         await self.redis.start()
+        await self._redis_cache.start()
         cleared = await self.redis.clear()
+        # Clear any desired_symbols lists to force a clean repopulate and avoid stale/failed symbols.
+        try:
+            if self.redis._client:
+                await self.redis._client.delete(f"{self.redis_prefix}:desired_symbols")
+                async for key in self.redis._client.scan_iter(match=f"{self.redis_prefix}:desired_symbols:*"):
+                    await self.redis._client.delete(key)
+                # Clear any depth/l1 data under this prefix to avoid stale cache.
+                async for key in self.redis._client.scan_iter(match=f"{self.redis_prefix}:l1:*"):
+                    await self.redis._client.delete(key)
+                async for key in self.redis._client.scan_iter(match=f"{self.redis_prefix}:l5:*"):
+                    await self.redis._client.delete(key)
+                log.info("Cleared desired_symbols lists (prefix=%s)", self.redis_prefix)
+        except Exception as exc:
+            log.warning("Failed to clear desired_symbols lists: %s", exc)
         log.info("Redis hot cache cleared %d keys (prefix=%s)", cleared, self.redis_prefix)
         await self.redis.save_desired_symbols(self.symbols, self.per_exchange_symbols)
         await self.ws_manager.start()
