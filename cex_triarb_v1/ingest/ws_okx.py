@@ -94,6 +94,12 @@ class OkxWsAdapter(BaseWsAdapter):
         except Exception:
             metrics.WS_MESSAGE_ERRORS.labels(exchange="OKX").inc()
             return
+        if msg.get("event") == "subscribe":
+            arg = (msg.get("arg") or {})
+            inst_id = arg.get("instId")
+            channel = arg.get("channel")
+            log.info("OKX SUBSCRIBED channel=%s instId=%s", channel, inst_id)
+            return
         if msg == "pong" or msg.get("event") == "pong":
             return
         if msg.get("event") == "subscribe":
