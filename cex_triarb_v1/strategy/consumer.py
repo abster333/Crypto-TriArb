@@ -31,6 +31,7 @@ class L1:
     ask_size: float
     ts_event: int
     ts_ingest: int
+    latency_ms: int = 0
     bids: Optional[List[List[float]]] = None
     asks: Optional[List[List[float]]] = None
 
@@ -238,6 +239,11 @@ class StrategyConsumer:
         bid_size = bids[0][1] if len(bids[0]) > 1 else 0.0
         ask = asks[0][0]
         ask_size = asks[0][1] if len(asks[0]) > 1 else 0.0
+        latency_ms = 0
+        try:
+            latency_ms = max(0, int(payload.get("ts_ingest", 0)) - int(payload.get("ts_event", 0)))
+        except Exception:
+            pass
         l1 = L1(
             bid=bid,
             bid_size=bid_size,
@@ -245,6 +251,7 @@ class StrategyConsumer:
             ask_size=ask_size,
             ts_event=payload.get("ts_event", 0),
             ts_ingest=payload.get("ts_ingest", 0),
+            latency_ms=latency_ms,
             bids=bids if self.use_depth else None,
             asks=asks if self.use_depth else None,
         )
@@ -285,6 +292,13 @@ class StrategyConsumer:
             if roi_bps >= self.roi_bps:
                 first, _ = self._active.get(cycle.id, (now, now))
                 self._active[cycle.id] = (first, now)
+                latencies = [
+                    self._l1[(leg.exchange, leg.symbol)].latency_ms
+                    for leg in cycle.legs
+                    if (leg.exchange, leg.symbol) in self._l1
+                ]
+                latency_max = max(latencies) if latencies else 0
+                latency_avg = sum(latencies) / len(latencies) if latencies else 0
                 payload = {
                     "cycle_id": cycle.id,
                     "duration_ms": now - first,
@@ -300,8 +314,19 @@ class StrategyConsumer:
                     "leg_fills_net": leg_debug_net,
                     "leg_fills_gross": leg_debug_gross,
                     "ts_detected": now,
+                    "latency_ms": {
+                        "per_leg": latencies,
+                        "max": latency_max,
+                        "avg": latency_avg,
+                    },
                 }
-                log.info("OPP %s roi=%.2f bps", cycle.id, roi_bps)
+                log.info(
+                    "OPP %s roi=%.2f bps max_latency=%dms avg_latency=%.1fms",
+                    cycle.id,
+                    roi_bps,
+                    latency_max,
+                    latency_avg,
+                )
                 log_opportunity(self.logger, payload)
                 if self._nc:
                     await self._nc.publish(self.publish_subject, json.dumps(payload).encode())
@@ -465,6 +490,7 @@ class StrategyConsumer:
                 ask = float(data.get("ask", 0.0))
                 ts_event = int(float(data.get("ts_event", 0)))
                 ts_ingest = int(float(data.get("ts_ingest", 0)))
+                latency_ms = max(0, ts_ingest - ts_event) if ts_event else 0
                 # Try to hydrate sizes from L5 if present.
                 bid_size = 0.0
                 ask_size = 0.0
@@ -487,6 +513,7 @@ class StrategyConsumer:
                     ask_size=ask_size,
                     ts_event=ts_event,
                     ts_ingest=ts_ingest,
+                    latency_ms=latency_ms,
                     bids=bids if self.use_depth else None,
                     asks=asks if self.use_depth else None,
                 )
@@ -511,6 +538,8 @@ class StrategyConsumer:
                     bids = _json.loads(data.get("bids", "[]"))
                     asks = _json.loads(data.get("asks", "[]"))
                     ts_event = int(float(data.get("ts_event", 0)))
+                    ts_ingest = ts_event
+                    latency_ms = 0
                     bid = float(bids[0][0]) if bids else 0.0
                     bid_size = float(bids[0][1]) if bids and len(bids[0]) > 1 else 0.0
                     ask = float(asks[0][0]) if asks else 0.0
@@ -523,7 +552,8 @@ class StrategyConsumer:
                         ask=ask,
                         ask_size=ask_size,
                         ts_event=ts_event,
-                        ts_ingest=ts_event,
+                        ts_ingest=ts_ingest,
+                        latency_ms=latency_ms,
                         bids=bids,
                         asks=asks,
                     )

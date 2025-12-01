@@ -5,6 +5,7 @@ import json
 import logging
 import time
 import contextlib
+import re
 from typing import Awaitable, Callable, Optional, Sequence
 
 import websockets
@@ -47,6 +48,7 @@ class OkxWsAdapter(BaseWsAdapter):
         session_factory: Callable[..., Awaitable] | None = None,
         on_depth: Optional[Callable[[DepthSnapshot], Awaitable[None]]] = None,
         depth_levels: int = 5,
+        prune_failed: Optional[Callable[[str], Awaitable[None]]] = None,
     ) -> None:
         super().__init__("OKX", symbols)
         self.url = url
@@ -58,6 +60,7 @@ class OkxWsAdapter(BaseWsAdapter):
         self._depth_levels = max(1, depth_levels)
         self._backoff = 1.0
         self._requested: set[str] = set(_to_inst_id(s) for s in symbols)
+        self._prune_failed = prune_failed
 
     def _subscribe_payload(self) -> str:
         args = []
@@ -106,9 +109,19 @@ class OkxWsAdapter(BaseWsAdapter):
             message = msg.get("msg") or msg.get("message")
             inst_id = arg.get("instId")
             channel = arg.get("channel")
+            # Try to extract instId from message text if arg is missing
+            if not inst_id and message:
+                m = re.search(r"instId:([A-Za-z0-9\\-]+)", message)
+                if m:
+                    inst_id = m.group(1)
             log.error("OKX SUBSCRIBE ERROR code=%s instId=%s channel=%s msg=%s", code, inst_id, channel, message)
-            if inst_id in self._requested:
+            if inst_id and inst_id in self._requested:
                 self._requested.discard(inst_id)
+            if inst_id and self._prune_failed:
+                try:
+                    await self._prune_failed(inst_id)
+                except Exception as exc:  # noqa: BLE001
+                    log.warning("Failed to prune instId=%s after error: %s", inst_id, exc)
             return
         if msg.get("event") == "subscribe":
             arg = (msg.get("arg") or {})
@@ -149,7 +162,7 @@ class OkxWsAdapter(BaseWsAdapter):
     async def _ping_loop(self, ws) -> None:
         while True:
             try:
-                await ws.send(json.dumps({"op": "ping"}))
+                await ws.ping()
             except Exception:
                 return
             await asyncio.sleep(20)

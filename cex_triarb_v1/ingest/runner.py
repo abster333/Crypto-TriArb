@@ -237,13 +237,14 @@ class IngestService:
         else:
             self.coinbase_channels = ["ticker"]
             self.kraken_book_depth = self.depth_levels  # unused when depth is off
-            self.okx_book_depth = self.depth_levels
+        self.okx_book_depth = self.depth_levels
         self.kraken_batch_size = max(1, kraken_batch_size)
         self.coinbase_ws_mode = (coinbase_ws_mode or "EXCHANGE").upper()
         self.coinbase_batch_size = max(1, coinbase_batch_size)
         self.coinbase_api_key = coinbase_api_key
         self.coinbase_api_secret = coinbase_api_secret
         self.coinbase_api_passphrase = coinbase_api_passphrase
+        self.okx_batch_size = max(1, okx_batch_size)
         self.redis_url = redis_url
         self.redis_prefix = redis_prefix.rstrip(":")
         self._redis_cache = RedisHotCache(url=self.redis_url, prefix=self.redis_prefix)
