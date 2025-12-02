@@ -95,6 +95,7 @@ flowchart LR
 - Strategy: `python -m cex_depth_v1.strategy_main` (auto-builds cycles from Redis desired symbols; emits per-leg fill details and ROI/gross ROI).
   - Per-cycle payload now includes per-leg latency (ts_ingest - ts_event) with max/avg in logs.
   - Freshness gate: `DEPTH_STALE_MS` (default 500 ms) skips cycles with stale books; set to a large value (not 0) to effectively disable the gate.
+  - Depth phase toggles via `DEPTH_ENABLE_DEPTH_OPTIMIZATION` / `STRAT_ENABLE_DEPTH_OPTIMIZATION` (defaults to `STRAT_USE_DEPTH`). When enabled, every profitable top-of-book cycle gets an incremental depth walk with iteration-by-iteration ROI, fill sizes, and stop reasons.
 - UI: `python -m cex_depth_v1.ui_main` → http://localhost:${DEPTH_UI_PORT:-8090} (shows depth, opps, cycles with per-leg fills/fees and age).
 - NATS/Redis connections have retry/backoff; just ensure the brokers are up before starting the stack.
 - Fees: default taker bps via env (`FEE_COINBASE_BPS`, `FEE_KRAKEN_BPS`); otherwise uses conservative defaults (Coinbase 6 bps). Retrieve your real Coinbase fee via `/fees` API and export the env var to match.

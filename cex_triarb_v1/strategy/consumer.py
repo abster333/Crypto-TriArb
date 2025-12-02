@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import math
 import time
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple, Set
@@ -47,6 +48,37 @@ class Leg:
 class Cycle:
     legs: List[Leg]
     id: str
+
+
+@dataclass
+class DepthLegState:
+    leg: Leg
+    levels: List[Tuple[float, float]]
+    level_idx: int = -1
+    price: float = 0.0
+    remaining: float = 0.0
+
+    def __post_init__(self) -> None:
+        self.advance()
+
+    def advance(self) -> bool:
+        while True:
+            self.level_idx += 1
+            if self.level_idx >= len(self.levels):
+                self.price = 0.0
+                self.remaining = 0.0
+                return False
+            price, size = self.levels[self.level_idx]
+            if price > 0 and size > 0:
+                self.price = price
+                self.remaining = size
+                return True
+
+    def consume(self, amount: float) -> bool:
+        self.remaining -= amount
+        if self.remaining <= 1e-12:
+            return self.advance()
+        return True
 
 
 def parse_cycles(env_value: str) -> List[Cycle]:
@@ -292,6 +324,9 @@ class StrategyConsumer:
             if roi_bps >= self.roi_bps:
                 first, _ = self._active.get(cycle.id, (now, now))
                 self._active[cycle.id] = (first, now)
+                depth_details = None
+                if self.enable_depth_optimization and self.use_depth:
+                    depth_details = self._depth_optimize_cycle(cycle)
                 latencies = [
                     self._l1[(leg.exchange, leg.symbol)].latency_ms
                     for leg in cycle.legs
@@ -313,6 +348,8 @@ class StrategyConsumer:
                     "legs": [leg.__dict__ for leg in cycle.legs],
                     "leg_fills_net": leg_debug_net,
                     "leg_fills_gross": leg_debug_gross,
+                    "depth_iterations": depth_details.get("iterations") if depth_details else None,
+                    "depth_summary": depth_details.get("summary") if depth_details else None,
                     "ts_detected": now,
                     "latency_ms": {
                         "per_leg": latencies,
@@ -457,6 +494,224 @@ class StrategyConsumer:
         TODO: Walk depth levels per leg, maintain ROI > threshold, return execution plan.
         """
         return None
+
+    def _depth_optimize_cycle(self, cycle: Cycle) -> Optional[dict]:
+        states: List[DepthLegState] = []
+        for leg in cycle.legs:
+            book = self._l1.get((leg.exchange, leg.symbol))
+            if not book:
+                return None
+            ladder = book.asks if leg.side == "BUY" else book.bids
+            if not ladder:
+                return None
+            levels: List[Tuple[float, float]] = []
+            for level in ladder:
+                if len(level) < 2:
+                    continue
+                try:
+                    price = float(level[0])
+                    size = float(level[1])
+                except (TypeError, ValueError):
+                    continue
+                if price <= 0 or size <= 0:
+                    continue
+                levels.append((price, size))
+            if not levels:
+                return None
+            state = DepthLegState(leg=leg, levels=levels)
+            if state.price <= 0 or state.remaining <= 0:
+                return None
+            states.append(state)
+        return self._depth_iteration_loop(states)
+
+    def _depth_iteration_loop(self, states: List[DepthLegState]) -> Optional[dict]:
+        iterations: List[dict] = []
+        cumulative_start = 0.0
+        cumulative_end = 0.0
+        cumulative_start_gross = 0.0
+        cumulative_end_gross = 0.0
+        budget_remaining = self.start_notional
+        limited_budget = math.isfinite(budget_remaining)
+        stop_reason = "insufficient_depth"
+        while True:
+            ratios = self._depth_ratio_chain(states)
+            if ratios is None:
+                break
+            limits: List[float] = []
+            for idx, state in enumerate(states):
+                ratio = ratios[idx]
+                if ratio <= 0:
+                    limits.append(0.0)
+                    continue
+                if state.leg.side == "BUY":
+                    cap = state.remaining * state.price
+                else:
+                    cap = state.remaining
+                limits.append(cap / ratio)
+            delta_start = min(limits) if limits else 0.0
+            if limited_budget:
+                delta_start = min(delta_start, budget_remaining)
+            if not math.isfinite(delta_start) or delta_start <= 0:
+                break
+            sim = self._simulate_depth_chunk(delta_start, states)
+            if sim is None:
+                break
+            if sim["roi_bps"] <= 0:
+                stop_reason = "non_positive_roi"
+                break
+            cumulative_start += sim["start_amount"]
+            cumulative_end += sim["end_amount"]
+            cumulative_start_gross += sim["gross_start_amount"]
+            cumulative_end_gross += sim["gross_end_amount"]
+            sim["iteration"] = len(iterations) + 1
+            sim["cumulative_start"] = cumulative_start
+            sim["cumulative_end"] = cumulative_end
+            sim["cumulative_start_gross"] = cumulative_start_gross
+            sim["cumulative_end_gross"] = cumulative_end_gross
+            iterations.append(sim)
+            for idx, consume in enumerate(sim["consumptions"]):
+                states[idx].consume(consume)
+            if limited_budget:
+                budget_remaining -= delta_start
+                if budget_remaining <= 1e-9:
+                    stop_reason = "start_notional_exhausted"
+                    break
+            if any(state.price <= 0 or state.remaining <= 0 for state in states):
+                stop_reason = "depth_exhausted"
+                break
+        if not iterations:
+            return {
+                "iterations": [],
+                "summary": {
+                    "reason": stop_reason,
+                    "total_start": 0.0,
+                    "total_end": 0.0,
+                },
+            }
+        roi_total = ((cumulative_end - cumulative_start) / cumulative_start * 10_000) if cumulative_start > 0 else None
+        roi_gross_total = (
+            (cumulative_end_gross - cumulative_start_gross) / cumulative_start_gross * 10_000
+        ) if cumulative_start_gross > 0 else None
+        return {
+            "iterations": iterations,
+            "summary": {
+                "reason": stop_reason,
+                "total_start": cumulative_start,
+                "total_end": cumulative_end,
+                "total_start_gross": cumulative_start_gross,
+                "total_end_gross": cumulative_end_gross,
+                "roi_bps": roi_total,
+                "gross_roi_bps": roi_gross_total,
+                "iteration_count": len(iterations),
+            },
+        }
+
+    def _depth_ratio_chain(self, states: List[DepthLegState]) -> Optional[List[float]]:
+        ratios: List[float] = []
+        current = 1.0
+        for state in states:
+            price = state.price
+            if price <= 0:
+                return None
+            ratios.append(current)
+            fee = self.fees_bps.get(state.leg.exchange.upper(), 0.0) / 10_000.0
+            if state.leg.side == "BUY":
+                current = current / price
+            else:
+                current = current * price * (1.0 - fee)
+                if current <= 0:
+                    return None
+        return ratios
+
+    def _simulate_depth_chunk(self, start_amount: float, states: List[DepthLegState]) -> Optional[dict]:
+        if start_amount <= 0:
+            return None
+        amt_net = start_amount
+        amt_gross = start_amount
+        start_amount_net: Optional[float] = None
+        start_amount_gross: Optional[float] = None
+        start_ccy = ""
+        end_ccy = ""
+        leg_infos: List[dict] = []
+        consumptions: List[float] = []
+        for state in states:
+            leg = state.leg
+            price = state.price
+            fee = self.fees_bps.get(leg.exchange.upper(), 0.0) / 10_000.0
+            if price <= 0:
+                return None
+            base, quote = parse_symbol(leg.symbol) or (None, None)
+            if leg.side == "BUY":
+                base_fill = amt_net / price if price else 0.0
+                consumptions.append(base_fill)
+                if start_amount_net is None:
+                    start_amount_net = amt_net * (1.0 + fee)
+                    start_ccy = quote or leg.symbol
+                if start_amount_gross is None:
+                    start_amount_gross = amt_gross
+                leg_infos.append(
+                    {
+                        "exchange": leg.exchange,
+                        "symbol": leg.symbol,
+                        "side": leg.side,
+                        "price": price,
+                        "level": state.level_idx,
+                        "base_fill": base_fill,
+                        "input_amount": amt_net,
+                        "output_amount": base_fill,
+                        "fee_bps": fee * 10_000,
+                    }
+                )
+                amt_net = base_fill
+                amt_gross = amt_gross / price if price else 0.0
+                end_ccy = base or leg.symbol
+            else:
+                base_fill = amt_net
+                consumptions.append(base_fill)
+                quote_out = base_fill * price
+                quote_out_net = quote_out * (1.0 - fee)
+                if start_amount_net is None:
+                    start_amount_net = base_fill
+                    start_ccy = base or leg.symbol
+                if start_amount_gross is None:
+                    start_amount_gross = amt_gross
+                leg_infos.append(
+                    {
+                        "exchange": leg.exchange,
+                        "symbol": leg.symbol,
+                        "side": leg.side,
+                        "price": price,
+                        "level": state.level_idx,
+                        "base_fill": base_fill,
+                        "input_amount": amt_net,
+                        "output_amount": quote_out_net,
+                        "fee_bps": fee * 10_000,
+                    }
+                )
+                amt_net = quote_out_net
+                amt_gross = amt_gross * price
+                end_ccy = quote or leg.symbol
+        if start_amount_net is None or start_amount_net <= 0:
+            return None
+        if start_amount_gross is None or start_amount_gross <= 0:
+            return None
+        roi_bps = ((amt_net - start_amount_net) / start_amount_net * 10_000) if start_amount_net else 0.0
+        gross_roi_bps = (
+            (amt_gross - start_amount_gross) / start_amount_gross * 10_000
+        ) if start_amount_gross else 0.0
+        return {
+            "start_amount": start_amount_net,
+            "start_ccy": start_ccy,
+            "end_amount": amt_net,
+            "end_ccy": end_ccy,
+            "roi_bps": roi_bps,
+            "gross_start_amount": start_amount_gross,
+            "gross_end_amount": amt_gross,
+            "gross_roi_bps": gross_roi_bps,
+            "leg_levels": leg_infos,
+            "consumptions": consumptions,
+            "delta_start": start_amount,
+        }
 
     async def _hydrate_from_redis(self) -> None:
         try:
